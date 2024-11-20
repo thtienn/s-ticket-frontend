@@ -1,5 +1,6 @@
 // src/App.jsx
 import UserList from './components/UserList';
+import Login from './components/Login';
 import Home from './components/home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -11,8 +12,9 @@ const App = () => {
         <div className='relative min-h-[100dvh] w-full'>
           <Router>
             <Routes>
-              <Route path="/user-list" element={<UserList />} />
               <Route path="/" element={<Home />} />
+              <Route path="/user-list" element={<UserList />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </Router>
         </div>
