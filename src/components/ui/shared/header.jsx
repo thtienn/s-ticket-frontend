@@ -33,7 +33,7 @@ const NavItem = ({ title, icon, link, isActive }) => {
 
 export default function Header() {
     return (
-        <div className="max-w-screen sticky inset-0 z-10 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
+        <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
                 <div className="flex items-center gap-6">
                     <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />

@@ -60,7 +60,7 @@ const ABOUT_US_ITEMS = [
 
 export default function Footer() {
     return(
-        <div className="max-w-screen sticky inset-x-0 bottom-0 z-10 bg-[#1b1b1b] !text-[#fafafa]">
+        <div className="max-w-screen bottom-0 z-10 bg-[#1b1b1b] !text-[#fafafa]">
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-start px-[108px] pt-20 pb-[200px] justify-between" >
                 <div className="flex flex-col items-start gap-4">
                     <div className="flex flex-col items-start gap-2 -translate-x-3">
