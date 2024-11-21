@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
 const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, event }) => {
   const calculateTotal = () => {
     return tickets.reduce((total, ticket) => {
-      const quantity = selectedTickets[ticket.id] || 0;
-      return total + quantity * ticket.price;
-    }, 0);
-  };
+      const quantity = selectedTickets[ticket.id] || 0
+      return total + quantity * ticket.price
+    }, 0)
+  }
   return (
     <div className="w-[25%] min-w-64 p-4 bg-[#FAFAFA] space-y-4 text-sm text-[#1b1b1b]">
       <span className='font-bold text-lg'>Chi tiết đơn hàng</span>
@@ -84,7 +84,7 @@ const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, ev
         Mua ngay
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default OrderSummary;
+export default OrderSummary

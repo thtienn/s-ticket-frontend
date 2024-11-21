@@ -12,8 +12,6 @@ const tickets = [
   { id: 1, name: 'VÉ RỐP RẺNG', price: 490000, description: 'Hạng vé ĐỨNG.', amount: 0 },
   { id: 2, name: 'VÉ THÔNG THẢ', price: 1120000, description: 'Hạng vé ngồi.', amount: 10 },
   { id: 3, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.', amount: 2 },
-  // { id: 4, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.' },
-  // { id: 5, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.' },
 ]
 const event = {
   id: 1,
@@ -95,6 +93,7 @@ export default function Booking() {
                 <FirstStep
                   selectedTickets={selectedTickets}
                   setSelectedTickets={setSelectedTickets}
+                  tickets={tickets}
                 />
               }
               {currentStep == 1 &&

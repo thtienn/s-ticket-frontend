@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { getDistricts, getProvinces, getWards } from "../../../controllers/provinceController"
-import { useForm } from "react-hook-form"
 
 const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}) => {
   const [locations, setLocations] = useState({
@@ -125,6 +124,7 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
                 },
               })}
             >
+              <option value="" disabled></option>
               {locations.provinces.map((province) => (
                 <option key={province.code} value={province.code}>
                   {province.name}
@@ -145,6 +145,7 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
                 },
               })}
             >
+              <option value="" disabled></option>
               {locations.districts.map((province) => (
                 <option key={province.code} value={province.code}>
                   {province.name}
@@ -164,6 +165,7 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
                 onChange: handleUserChange
               })}
             >
+              <option value="" disabled></option>
               {locations.wards.map((ward) => (
                 <option key={ward.code} value={ward.code}>
                   {ward.name}

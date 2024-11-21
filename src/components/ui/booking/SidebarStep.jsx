@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const SidebarStep = ({ currentStep }) => {
-  const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"];
+  const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
 
   return (
     <div className="w-[20%] p-4 max-w-72 bg-[#FAFAFA] space-y-4">
@@ -28,7 +28,7 @@ const SidebarStep = ({ currentStep }) => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default SidebarStep;
+export default SidebarStep

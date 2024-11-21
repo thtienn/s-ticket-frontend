@@ -1,20 +1,12 @@
-import React from "react";
+import React from "react"
 
-const tickets = [
-  { id: 1, name: 'VÉ RỐP RẺNG', price: 490000, description: 'Hạng vé ĐỨNG.', amount: 0 },
-  { id: 2, name: 'VÉ THÔNG THẢ', price: 1120000, description: 'Hạng vé ngồi.', amount: 10 },
-  { id: 3, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.', amount: 2 },
-  // { id: 4, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.' },
-  // { id: 5, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.' },
-];
-
-const FirstStep = ({selectedTickets, setSelectedTickets}) => {
+const FirstStep = ({selectedTickets, setSelectedTickets, tickets}) => {
   const handleTicketChange = (ticketId, amount) => {
     setSelectedTickets((prev) => ({
       ...prev,
       [ticketId]: Math.max(0, (prev[ticketId] || 0) + amount),
-    }));
-  };
+    }))
+  }
   return (
     <div className='flex flex-col gap-8'>
       <div>
