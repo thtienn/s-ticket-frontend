@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { useNavigate } from 'react-router-dom'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
+import Footer from './ui/shared/footer'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -31,12 +32,22 @@ export default function Login() {
 
     if (!session) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <Auth
-                    supabaseClient={supabase}
-                    appearance={{ theme: ThemeSupa }}
-                    providers={['google']}
-                />
+            <div className="relative min-h-[100dvh] bg-[#fafafa] w-full">
+                <div className='relative z-0'>
+                    <div className='h-full w-full'>
+                        <main className='flex-grow items-center justify-center flex flex-col w-full overflow-x-hidden py-20 bg-[#219ce4]'>
+                            <div className='bg-[#fafafa] px-24 py-16 rounded-2xl shadow-[0_1px_10px_2px_rgba(0,0,0,0.1)] flex flex-col items-center gap-5'>
+                                <span className='text-[#1b1b1b] text-3xl font-bold'>Đăng nhập</span>
+                                <Auth
+                                    supabaseClient={supabase}
+                                    appearance={{ theme: ThemeSupa }}
+                                    providers={['google']}
+                                />
+                            </div>
+                        </main>
+                        <Footer />
+                    </div>                
+                </div>
             </div>
         );
     }

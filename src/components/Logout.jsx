@@ -15,9 +15,9 @@ export const Logout = () => {
     navigate('/login'); // Redirect to login page after logging out
   };
 
-  return (
-    <div>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
-  );
+  // return (
+  //   <div>
+  //     <button onClick={handleLogout}>Logout</button>
+  //   </div>
+  // );
 };
