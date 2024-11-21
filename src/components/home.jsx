@@ -1,5 +1,4 @@
 import Footer from './ui/shared/footer';
-import Header from './ui/shared/header';
 import Section from './ui/home/section';
 import Carousel from './ui/home/carousel';
 
@@ -19,7 +18,6 @@ export default function Home() {
                     </main>
                     <Footer />
                 </div>
-
             </div>
         </div>
     );
