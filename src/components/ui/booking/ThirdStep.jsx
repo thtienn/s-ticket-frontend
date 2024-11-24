@@ -57,9 +57,9 @@ const ThirdStep = ({payment, setPayment}) => {
         </div>
         {payment.method === 2 && (
           <div className="flex flex-col items-start gap-4 pl-5">
-            <label className="cursor-pointer">
+            <label className="cursor-pointer flex gap-4">
               <input
-                className='w-3 h-3 mr-2'
+                className='w-3 h-3 mt-2'
                 type="radio"
                 id="momo"
                 name="paymentOption"
@@ -67,7 +67,14 @@ const ThirdStep = ({payment, setPayment}) => {
                 checked={payment.option === 0}
                 onChange={handleOptionChange}
               />
-              Ví MoMo
+              <div className="flex flex-col items-start gap-1">
+                <span>Ví MoMo</span>
+                <img
+                  src="/assets/icons/momo.svg"
+                  alt="MoMo"
+                  className="w-5 h-5"
+                />
+              </div>
             </label>
             <label className="cursor-pointer">
               <input

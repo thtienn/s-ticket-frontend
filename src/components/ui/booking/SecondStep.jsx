@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { getDistricts, getProvinces, getWards } from "../../../controllers/provinceController"
+import { fetchProvinces, fetchDistricts, fetchWards } from "../../../controllers/provinceController"
 
 const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}) => {
   const [locations, setLocations] = useState({
@@ -20,7 +20,7 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
   // Lấy danh sách tỉnh/thành
   useEffect(() => {
     const fetchProvincesData = async () => {
-      const provincesData = await getProvinces()
+      const provincesData = await fetchProvinces()
       setLocations((prev) => ({
         ...prev,
         provinces: provincesData,
@@ -33,7 +33,7 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
   useEffect(() => {
     if (user.city) {
       const fetchDistrictsData = async () => {
-        const districtsData = await getDistricts(user.city)
+        const districtsData = await fetchDistricts(user.city)
         setLocations((prev) => ({
           ...prev,
           districts: districtsData,
@@ -47,7 +47,7 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
   useEffect(() => {
     if (user.district) {
       const fetchWardsData = async () => {
-        const wardsData = await getWards(user.district)
+        const wardsData = await fetchWards(user.district)
         setLocations((prev) => ({
           ...prev,
           wards: wardsData,

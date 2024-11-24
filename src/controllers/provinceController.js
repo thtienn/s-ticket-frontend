@@ -1,13 +1,13 @@
-import { fetchProvinces, fetchDistricts, fetchWards } from '../models/Province';
+import { getProvinces, getDistricts, getWards } from '../models/Province';
 
-export const getProvinces = async () => {
-  return await fetchProvinces();
+export const fetchProvinces = async () => {
+  return await getProvinces();
 };
 
-export const getDistricts = async (provinceId) => {
-  return await fetchDistricts(provinceId);
+export const fetchDistricts = async (provinceId) => {
+  return await getDistricts(provinceId);
 };
 
-export const getWards = async (districtId) => {
-  return await fetchWards(districtId);
+export const fetchWards = async (districtId) => {
+  return await getWards(districtId);
 };

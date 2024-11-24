@@ -1,4 +1,4 @@
-export const fetchProvinces = async () => {
+export const getProvinces = async () => {
     try {
       const response = await fetch('https://provinces.open-api.vn/api/p/');
       return await response.json();
@@ -8,7 +8,7 @@ export const fetchProvinces = async () => {
     }
   };
   
-  export const fetchDistricts = async (provinceId) => {
+  export const getDistricts = async (provinceId) => {
     try {
       const response = await fetch(`https://provinces.open-api.vn/api/p/${provinceId}?depth=2`);
       const data = await response.json();
@@ -19,7 +19,7 @@ export const fetchProvinces = async () => {
     }
   };
   
-  export const fetchWards = async (districtId) => {
+  export const getWards = async (districtId) => {
     try {
       const response = await fetch(`https://provinces.open-api.vn/api/d/${districtId}?depth=2`);
       const data = await response.json();

@@ -12,16 +12,16 @@ const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, ev
       <span className='font-bold text-lg'>Chi tiết đơn hàng</span>
       <div className='flex items-center gap-2 p-2 border border-[#B2BCC2] rounded-lg'>
         <img
-          src={event.image}
+          src={event?.image}
           alt="Event"
           className='w-9 h-9 rounded'
         />
-        <span className='text-xs font-bold'>{event.title}</span>
+        <span className='text-xs font-bold'>{event?.title}</span>
       </div>
       
       <div className="flex justify-between items-center">
         <span className='text-[#526876] font-normal'>Thời gian</span>
-        <span className='text-[#1B1B1B] font-semibold'>{event.date || ''}</span>
+        <span className='text-[#1B1B1B] font-semibold'>{event?.start_time || ''}</span>
       </div>
 
       <hr className="border-t border-[#B2BCC2]" />

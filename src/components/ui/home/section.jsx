@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import EventCard from './event-card';
+import { useNavigate } from 'react-router-dom';
+import { fetchAllEvents } from '../../../controllers/eventController';
 
 const EVENTS = [
     {
@@ -73,6 +75,7 @@ function chunkArray(array, chunkSize) {
 
 export default function Section({ title, categoryItems, maxCards }) {
     const [activeCategory, setActiveCategory] = useState('Tất cả');
+    const [events, setEvents] = useState([]);
 
     useEffect(() => {
         if (categoryItems.length > 0) {
@@ -80,7 +83,21 @@ export default function Section({ title, categoryItems, maxCards }) {
         }
     }, [categoryItems]);
 
-    const eventsToDisplay = EVENTS.slice(0, maxCards); 
+    useEffect(() => {
+        const fetchEventData = async () => {
+          const eventsData = await fetchAllEvents()
+          setEvents(eventsData)
+        }
+        fetchEventData()
+    }, [])
+      
+    const navigate = useNavigate()
+    const handleNavigate = (event) => {
+        window.scrollTo(0, 0);
+        navigate(`/event-detail/${event.id}`);
+    }
+
+    const eventsToDisplay = events.slice(0, maxCards); 
     const chunkedEvents = chunkArray(eventsToDisplay, 3); 
 
     return (
@@ -104,7 +121,7 @@ export default function Section({ title, categoryItems, maxCards }) {
                         <div key={rowIndex} className="flex flex-row items-stretch gap-8">
                             {row.map((item) => (
                                 <div key={item.id} className="flex-1">
-                                    <EventCard event={item} />
+                                    <EventCard event={item} onClick={() => handleNavigate(item)}/>
                                 </div>
                             ))}
                         </div>

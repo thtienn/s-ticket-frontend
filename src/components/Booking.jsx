@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SidebarStep from './ui/booking/SidebarStep'
 import OrderSummary from './ui/booking/OrderSummary'
 import Header from './ui/shared/header'
@@ -7,21 +7,41 @@ import { useForm } from 'react-hook-form'
 import FirstStep from './ui/booking/FirstStep'
 import SecondStep from './ui/booking/SecondStep'
 import ThirdStep from './ui/booking/ThirdStep'
+import { useLocation, useParams } from 'react-router-dom'
+import { fetchEventById } from '../controllers/eventController'
 
-const tickets = [
-  { id: 1, name: 'VÉ RỐP RẺNG', price: 490000, description: 'Hạng vé ĐỨNG.', amount: 0 },
-  { id: 2, name: 'VÉ THÔNG THẢ', price: 1120000, description: 'Hạng vé ngồi.', amount: 10 },
-  { id: 3, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.', amount: 2 },
-]
-const event = {
-  id: 1,
-  title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
-  category: 'Âm nhạc',
-  image: '/assets/images/yhb.png',
-  date: '5 tháng 10, 2024',
-  price: 599000,
-}
+// const tickets = [
+//   { id: 1, name: 'VÉ RỐP RẺNG', price: 490000, description: 'Hạng vé ĐỨNG.', amount: 0 },
+//   { id: 2, name: 'VÉ THÔNG THẢ', price: 1120000, description: 'Hạng vé ngồi.', amount: 10 },
+//   { id: 3, name: 'VÉ SIÊU VIP', price: 5000000, description: 'Hạng vé VIP.', amount: 2 },
+// ]
+// const event = {
+//   id: 1,
+//   title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
+//   category: 'Âm nhạc',
+//   image: '/assets/images/yhb.png',
+//   date: '5 tháng 10, 2024',
+//   price: 599000,
+// }
 export default function Booking() {
+  const { event_id, show_id } = useParams()
+  const [eventFindById, setEvent] = useState([])
+  useEffect(() => {
+    const fetchEventData = async () => {
+      const eventData = await fetchEventById(event_id)
+      setEvent(eventData)
+    }
+    fetchEventData()
+  }, [])
+  const event = eventFindById[0]
+  const tickets = event?.shows?.find(show => show.show_id === Number(show_id))?.ticket_types || [];
+
+  // const [tickets, setTickets] = useState([])
+  // useEffect(() => {
+  //   if (event && showId !== undefined) {
+  //       setTickets(event.shows[showId]?.tickets || []);
+  //   }
+  // }, [event, showId]);
   const [currentStep, setCurrentStep] = useState(0)
   const [payment, setPayment] = useState({ method: 0, option: 0 })
   const [selectedTickets, setSelectedTickets] = useState({})

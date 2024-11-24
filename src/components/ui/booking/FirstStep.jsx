@@ -15,7 +15,7 @@ const FirstStep = ({selectedTickets, setSelectedTickets, tickets}) => {
       </div>
       <div className="flex flex-col gap-6">
         {tickets.map((ticket) => (
-          <div key={ticket.id} className="flex justify-between gap-4 items-center p-6 rounded-2xl bg-[#1b1b1b]">
+          <div key={ticket.ticket_id} className="flex justify-between gap-4 items-center p-6 rounded-2xl bg-[#1b1b1b]">
             <div>
               <div className='text-[#219ce4] text-2xl font-bold'>{ticket.name} | {ticket.price.toLocaleString()} đ</div>
               <div className='text-[#FAFAFA] italic text-sm font-normal'>{ticket.description}</div>

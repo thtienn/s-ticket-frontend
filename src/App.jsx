@@ -3,6 +3,7 @@ import UserList from './components/UserList';
 import Home from './components/home';
 import Booking from './components/Booking';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import EventDetail from './components/EventDetail';
 // import './App.css';
 
 const App = () => {
@@ -13,7 +14,9 @@ const App = () => {
           <Router>
             <Routes>
               <Route path="/user-list" element={<UserList />} />
-              <Route path="/" element={<Booking />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/event-detail/:id" element={<EventDetail />} />
+              <Route path="/booking/:event_id/:show_id" element={<Booking />} />
             </Routes>
           </Router>
         </div>
