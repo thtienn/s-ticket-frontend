@@ -9,7 +9,7 @@ export default function Button({ title, bgColor, textColor, icon, isActive, onCl
             onClick={onClick}
         >
             {icon ? <img src={`/assets/icons/${icon}.svg`} alt={icon} width={14} height={14} /> : null}
-            <span className={`text-base font-semibold ${icon ? '' : 'hover:text-[#219ce4]'}`}>{title}</span>
+            <span className={`text-base font-semibold ${icon || bgColor=='#219CE4' ? '' : 'hover:text-[#219ce4]'}`}>{title}</span>
         </div>
     )
 }

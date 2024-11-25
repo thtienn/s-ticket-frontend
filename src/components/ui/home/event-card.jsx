@@ -20,7 +20,7 @@ export default function EventCard({ event, onClick }) {
                         </div>
                     </div>
                 </div>
-                <Button bgColor={'#b2bcc2'} textColor={'#fafafa'} title={'Mua vé'} />
+                <Button bgColor={'#1b1b1b'} textColor={'#fafafa'} title={'Mua vé'} onClick={onClick} />
             </div>
         </div>
     )

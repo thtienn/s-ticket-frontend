@@ -1,56 +1,7 @@
 import { useState, useEffect } from 'react';
 import EventCard from './event-card';
-
-const EVENTS = [
-    {
-        id: 1,
-        title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
-        category: 'Âm nhạc',
-        image: '/assets/images/yhb.png',
-        date: '5 tháng 10, 2024',
-        price: 599000,
-    },
-    {
-        id: 2,
-        title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
-        category: 'Âm nhạc',
-        image: '/assets/images/yhb.png',
-        date: '5 tháng 10, 2024',
-        price: 599000,
-    },
-    {
-        id: 3,
-        title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
-        category: 'Âm nhạc',
-        image: '/assets/images/yhb.png',
-        date: '5 tháng 10, 2024',
-        price: 599000,
-    },
-    {
-        id: 4,
-        title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
-        category: 'Âm nhạc',
-        image: '/assets/images/yhb.png',
-        date: '5 tháng 10, 2024',
-        price: 599000,
-    },
-    {
-        id: 5,
-        title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
-        category: 'Âm nhạc',
-        image: '/assets/images/yhb.png',
-        date: '5 tháng 10, 2024',
-        price: 599000,
-    },
-    {
-        id: 6,
-        title: 'YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024 YÊU HÒA BÌNH 2024',
-        category: 'Âm nhạc',
-        image: '/assets/images/yhb.png',
-        date: '5 tháng 10, 2024',
-        price: 599000,
-    }
-];
+import { useNavigate } from 'react-router-dom';
+import EVENTS from '../../../mock_data/event';
 
 function CategoryButton({ category, onClick, isActive }) {
     return (
@@ -72,6 +23,9 @@ function chunkArray(array, chunkSize) {
 }
 
 export default function Section({ title, categoryItems, maxCards }) {
+    const navigate = useNavigate()
+    console.log(EVENTS);
+
     const [activeCategory, setActiveCategory] = useState('Tất cả');
 
     useEffect(() => {
@@ -104,7 +58,7 @@ export default function Section({ title, categoryItems, maxCards }) {
                         <div key={rowIndex} className="flex flex-row items-stretch gap-8">
                             {row.map((item) => (
                                 <div key={item.id} className="flex-1">
-                                    <EventCard event={item} />
+                                    <EventCard event={item} onClick={() => navigate(`/ticket-details/${item.id}`)} />
                                 </div>
                             ))}
                         </div>
