@@ -82,6 +82,22 @@ export default function Header() {
         )
     }
 
+    if (location.pathname.startsWith('/admin')) {
+        return (
+            <div className="max-w-screen sticky w-full top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
+                <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
+                    <div className="flex items-center gap-6">
+                        <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />
+                        <span className="text-2xl font-bold text-[#1b1b1b]">Quản trị viên</span>
+                    </div>
+                    <Link to="/">
+                        <a className="text-base font-semibold text-[#1b1b1b] underline">Bạn cần hỗ trợ?</a>
+                    </Link>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">

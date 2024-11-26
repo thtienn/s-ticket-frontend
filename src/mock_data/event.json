@@ -45,7 +45,8 @@
                 "quantity": 100,
                 "isSoldOut": false
             }
-        ]
+        ],
+        "approveStatus": "pending"
     },
     {
         "id": 2,
@@ -93,7 +94,8 @@
                 "quantity": 100,
                 "isSoldOut": false
             }
-        ]
+        ],
+        "approveStatus": "pending"
     },
     {
         "id": 3,
@@ -141,7 +143,8 @@
                 "quantity": 100,
                 "isSoldOut": false
             }
-        ]
+        ],
+        "approveStatus": "pending"
     },
     {
         "id": 4,
@@ -189,7 +192,8 @@
                 "quantity": 100,
                 "isSoldOut": false
             }
-        ]
+        ],
+        "approveStatus": "approved"
     },
     {
         "id": 5,
@@ -237,7 +241,8 @@
                 "quantity": 100,
                 "isSoldOut": false
             }
-        ]
+        ],
+        "approveStatus": "approved"
     },
     {
         "id": 6,
@@ -285,6 +290,7 @@
                 "quantity": 100,
                 "isSoldOut": false
             }
-        ]
+        ],
+        "approveStatus": "declined"
     }
 ]
