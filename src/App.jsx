@@ -5,6 +5,9 @@ import Header from './components/ui/shared/header';
 import TicketDetails from './components/ticket-details';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Admin from './components/admin/admin';
+import ManageEvents from './components/admin/manage-events';
+import ManageUsers from './components/admin/manage-users';
 
 const App = () => {
   return (
@@ -17,6 +20,9 @@ const App = () => {
             <Route path="/ticket-details/:id" element={<TicketDetails />} />
             <Route path="/user-list" element={<UserList />} />
             <Route path="/login" element={<Login />} />
+            <Route path='/admin' element={<Admin />} />
+            <Route path='/admin/manage-events' element={<ManageEvents />} />
+            <Route path='/admin/manage-users' element={<ManageUsers />} />
           </Routes>
         </div>
       </Router>
