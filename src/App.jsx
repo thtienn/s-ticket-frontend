@@ -4,6 +4,7 @@ import Home from './components/home';
 import Booking from './components/Booking';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import EventDetail from './components/EventDetail';
+import AddEvent from './components/AddEvent';
 // import './App.css';
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/event-detail/:id" element={<EventDetail />} />
               <Route path="/booking/:event_id/:show_id" element={<Booking />} />
+              <Route path="/add-event" element={<AddEvent />} />
             </Routes>
           </Router>
         </div>

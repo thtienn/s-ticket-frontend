@@ -11,13 +11,17 @@ export default function Banner({ event }) {
             <div className="flex flex-col gap-2">
               <span className="text-xl font-bold">{event?.title}</span>
               <span>{event?.organizer.name}</span>
-              <span>{event?.start_time}</span>
+
+              {/* <span>{event?.start_time}</span> */}
+
             </div>
             <div>
               <div className="flex items-center justify-between">
                 <span className='font-bold'>Giá vé từ</span>
                 <span className="text-2xl font-bold text-[#219CE4]">
+
                   {/* {event?.price.toLocaleString()} VND */}
+                  
                 </span>
               </div>
               <button className="bg-[#1B1B1B] text-[#FAFAFA] w-full px-4 py-2 rounded-2xl">

@@ -1,11 +1,9 @@
 import React from 'react'
 
-const SidebarStep = ({ currentStep }) => {
-  const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
-
+const SidebarStep = ({ currentStep, steps }) => {
   return (
     <div className="w-[20%] p-4 max-w-72 bg-[#FAFAFA] space-y-4">
-      {steps.map((step, index) => (
+      {steps?.map((step, index) => (
         <div
           key={index}
           className={`flex justify-start items-center p-2 rounded-xl gap-4 cursor-pointer text-sm font-semibold ${

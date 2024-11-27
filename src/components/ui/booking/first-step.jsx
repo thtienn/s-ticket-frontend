@@ -1,11 +1,18 @@
 import React from "react"
 
 const FirstStep = ({selectedTickets, setSelectedTickets, tickets}) => {
-  const handleTicketChange = (ticketId, amount) => {
-    setSelectedTickets((prev) => ({
-      ...prev,
-      [ticketId]: Math.max(0, (prev[ticketId] || 0) + amount),
-    }))
+  const handleTicketChange = (ticketId, changeAmount) => {
+    setSelectedTickets((prev) =>
+      prev.map((ticket) =>
+        ticket.ticket_id === ticketId
+          ? {
+              ...ticket,
+              amount: Math.max(0, Math.min(ticket.amount + changeAmount, ticket.max)
+              ),
+            }
+          : ticket
+      )
+    )
   }
   return (
     <div className='flex flex-col gap-8'>
@@ -21,9 +28,9 @@ const FirstStep = ({selectedTickets, setSelectedTickets, tickets}) => {
               <div className='text-[#FAFAFA] italic text-sm font-normal'>{ticket.description}</div>
             </div>
             <div className="flex justify-center items-center text-[#FAFAFA] text-xl font-bold">
-              <button className='bg-[#1b1b1b] border border-[#FAFAFA] w-12 h-12 rounded-full flex justify-center items-center' onClick={() => handleTicketChange(ticket.id, -1)}>-</button>
-              <span className='p-5'>{selectedTickets[ticket.id] || 0}</span>
-              <button className='bg-[#219ce4] w-12 h-12 rounded-full flex justify-center items-center' onClick={() => handleTicketChange(ticket.id, 1)}>+</button>
+              <button className='bg-[#1b1b1b] border border-[#FAFAFA] w-12 h-12 rounded-full flex justify-center items-center' onClick={() => handleTicketChange(ticket.ticket_id, -1)}>-</button>
+              <span className='p-5'>{selectedTickets.find((item) => item.ticket_id === ticket.ticket_id)?.amount || 0}</span>
+              <button className='bg-[#219ce4] w-12 h-12 rounded-full flex justify-center items-center' onClick={() => handleTicketChange(ticket.ticket_id, 1)}>+</button>
             </div>
           </div>
         ))}

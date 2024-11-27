@@ -11,8 +11,14 @@ export const getAllEvents = async () => {
     return data
 }
 
-export const getEventById = async (event_id) => {
-    const { data, error } = await supabase.from("events").select().eq("event_id", event_id)
+export const getEventById = async (id) => {
+    const { data, error } = await supabase.from("events").select().eq("id", id)
     if (error) throw error
     return data
 }
+
+export const createEvent = async (event) => {
+    const { data, error } = await supabase.from("events").insert(event);
+    if (error) throw error;
+    return data;
+};

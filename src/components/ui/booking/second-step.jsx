@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { fetchProvinces, fetchDistricts, fetchWards } from "../../../controllers/provinceController"
+import { useFormContext } from "react-hook-form"
 
-const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}) => {
+const SecondStep = ({ user, setUser }) => {
+  const { register, handleSubmit, getValues, setValue, control, formState: { errors } } = useFormContext()
+  // const { fields } = useFieldArray({
+  //   name: 'selected_ticket',
+  //   control,
+  // })
   const [locations, setLocations] = useState({
     provinces: [],
     districts: [],
@@ -70,10 +76,10 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
             className='w-full p-3 border border-[#1B1B1B] rounded-lg'
             {...register('name', { required: 'Họ và tên là bắt buộc' })}
             type="text"
-            onBlur={handleSubmit(handleUserChange)}
+            onBlur={handleUserChange}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                handleSubmit(handleUserChange)()
+                handleUserChange()
               }
             }}
           />
@@ -85,10 +91,10 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
               className='w-full p-3 border border-[#1B1B1B] rounded-lg'
               {...register('email', {required: 'Email là bắt buộc'})}
               type="email"
-              onBlur={handleSubmit(handleUserChange)}
+              onBlur={handleUserChange}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSubmit(handleUserChange)()
+                  handleUserChange()
                 }
               }}
             />
@@ -99,10 +105,10 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
               className='w-full p-3 border border-[#1B1B1B] rounded-lg'
               {...register('phone', {required: 'Số điện thoại là bắt buộc'})}
               type="text"
-              onBlur={handleSubmit(handleUserChange)}
+              onBlur={handleUserChange}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSubmit(handleUserChange)()
+                  handleUserChange()
                 }
               }}
             />
@@ -179,10 +185,10 @@ const SecondStep = ({user, setUser, register, handleSubmit, getValues, setValue}
               className='w-full p-3 border border-[#1B1B1B] rounded-lg'
               {...register('address', {required: 'Địa chỉ là bắt buộc'})}
               type="address"
-              onBlur={handleSubmit(handleUserChange)}
+              onBlur={handleUserChange}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  handleSubmit(handleUserChange)()
+                  handleUserChange()
                 }
               }}
             />

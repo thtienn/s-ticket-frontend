@@ -3,7 +3,10 @@ import React from 'react'
 const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, event }) => {
   const calculateTotal = () => {
     return tickets.reduce((total, ticket) => {
-      const quantity = selectedTickets[ticket.id] || 0
+      const selectedTicket = selectedTickets.find(
+        (t) => t.ticket_id === ticket.ticket_id
+      )
+      const quantity = selectedTicket ? selectedTicket.amount : 0
       return total + quantity * ticket.price
     }, 0)
   }
@@ -60,14 +63,19 @@ const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, ev
 
       <div className='space-y-2'>
         <span className='font-bold text-base'>Loại vé</span>
-        {tickets.map((ticket) => (
-          selectedTickets[ticket.id] > 0 && (
-            <div key={ticket.id} className="flex justify-between">
-              <span className='text-[#526876] font-normal'>{ticket.name} x{selectedTickets[ticket.id]}</span>
-              <span className='text-[#1B1B1B] font-semibold'>{(selectedTickets[ticket.id] * ticket.price).toLocaleString()} đ</span>
-            </div>
+        {tickets.map((ticket) => {
+          const selectedTicket = selectedTickets.find(
+            (t) => t.ticket_id === ticket.ticket_id
           )
-        ))}
+          if(selectedTicket?.amount > 0) {
+            return (
+            <div key={ticket.ticket_id} className="flex justify-between">
+              <span className='text-[#526876] font-normal'>{ticket.name} x{selectedTicket.amount}</span>
+              <span className='text-[#1B1B1B] font-semibold'>{(selectedTicket.amount * ticket.price).toLocaleString()} đ</span>
+            </div>
+            )
+          }
+        })}
       </div>
 
       <div className="flex justify-between">

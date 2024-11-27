@@ -5,7 +5,7 @@ export default function EventList({ event }) {
 
     const handleBooking = (show_id) => {
         window.scrollTo(0, 0);
-        navigate(`/booking/${event.event_id}/${show_id}`)
+        navigate(`/booking/${event.id}/${show_id}`)
     }
 
     return (
@@ -24,7 +24,7 @@ export default function EventList({ event }) {
                             }`}
                         >
                             <span>
-                                {show.start_time}, {show.end_time}
+                                {show.start_time} {show.start_date} - {show.end_time} {show.end_date}
                             </span>
                             {totalTicketsLeft > 0 ? (
                                 <button
