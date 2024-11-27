@@ -50,22 +50,53 @@ export default function Header() {
     const handleLogout = async () => {
         await supabase.auth.signOut();
         navigate('/');
-      };
+    };
 
     useEffect(() => {
         const loadSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             setSession(session);
+            if (session) {
+                const userEmail = session.user.email;
+
+                if (userEmail) {
+                    const { data: userData, error } = await supabase
+                        .from('users')
+                        .select('role')
+                        .eq('email', userEmail)
+                        .single();
+
+                    if (error) {
+                        console.error("Error fetching user data:", error);
+                        return;
+                    }
+
+                    if (userData && userData.role === 'admin') {
+                        if (!location.pathname.startsWith('/admin')) {
+                            navigate('/admin', { replace: true });
+                        }
+                    }
+                    else {
+                        if (location.pathname.startsWith('/admin')) {
+                            navigate('/', { replace: true });
+                        }
+                    }
+                }
+            }
         };
+
         loadSession();
+
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
         });
+
         return () => {
             subscription.unsubscribe();
         };
-    }, []);
+    }, [navigate, location.pathname]);
 
+    // if on login page, render a different header
     if (location.pathname === '/login') {
         return (
             <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
@@ -79,9 +110,10 @@ export default function Header() {
                     </Link>
                 </div>
             </div>
-        )
+        );
     }
 
+    // if on admin page, render a different header
     if (location.pathname.startsWith('/admin')) {
         return (
             <div className="max-w-screen sticky w-full top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
@@ -95,9 +127,10 @@ export default function Header() {
                     </Link>
                 </div>
             </div>
-        )
+        );
     }
 
+    // default header for authenticated users and guests
     return (
         <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
             <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
@@ -113,7 +146,10 @@ export default function Header() {
                     <Button title={'Tạo sự kiện'} bgColor={'#219ce4'} textColor={'#fafafa'} icon={'add-circle'} isActive />
                     <div className="flex flex-row items-center gap-6">
                         {session ? (
-                            <Button title={'Đăng xuất'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={handleLogout} />
+                            <>
+                                <div className="text-[#1b1b1b]">{session.user.email}</div>
+                                <Button title={'Đăng xuất'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={handleLogout} />
+                            </>
                         ) : (
                             <>
                                 <Button title={'Đăng nhập'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={navigateToLogin} />
@@ -121,7 +157,6 @@ export default function Header() {
                                 <Button title={'Đăng ký'} bgColor={'#fafafa'} textColor={'#1b1b1b'} />
                             </>
                         )}
-
                     </div>
                 </div>
             </div>
