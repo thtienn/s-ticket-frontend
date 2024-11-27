@@ -1,4 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const SIDEBAR_ITEMS = [
     {
@@ -35,6 +40,12 @@ function SidebarItem({ title, link, icon, isActive, onClick }) {
 }
 
 export default function AdminSidebar() {
+    const navigate = useNavigate()
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        navigate('/');
+    };
+
     return (
         <div className={`w-[18%] h-full min-h-screen flex flex-col items-center py-4 bg-[#fafafa] border-r-[1px] border-[#d9d9d9]`}>
             <div className="flex flex-col items-start w-full">
@@ -42,7 +53,7 @@ export default function AdminSidebar() {
                     <SidebarItem key={item.id} title={item.title} link={item.link} icon={item.icon} isActive={item.link === window.location.pathname} />
                 ))}
                 <div className='w-full h-[1px] bg-[#d9d9d9] my-4'></div>
-                <SidebarItem title='Đăng xuất' icon='globe' isActive={false} />
+                <SidebarItem title='Đăng xuất' icon='globe' isActive={false} onClick={handleLogout} />
             </div>
         </div>
     )

@@ -23,7 +23,7 @@ export default function Login() {
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
             if (session) {
-                navigate('/user-list'); // Forward to user list if logged in
+                navigate('/admin', { replace: true });
             }
         })
 
