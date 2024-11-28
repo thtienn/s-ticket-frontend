@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
 
-const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, event }) => {
+const OrderSummary = ({ currentStep, selectedTickets, event }) => {
+  const { watch, setValue } = useFormContext()
+  const paymentMethod = watch('payment_method')
+  const name = watch('name')
+  const mail = watch('mail')
+  const phone = watch('phone')
+
+  useEffect(() => {
+    setValue(`total_price`, calculateTotal())
+  }, [selectedTickets])
+
   const calculateTotal = () => {
-    return tickets.reduce((total, ticket) => {
-      const selectedTicket = selectedTickets.find(
-        (t) => t.ticket_id === ticket.ticket_id
-      )
-      const quantity = selectedTicket ? selectedTicket.amount : 0
-      return total + quantity * ticket.price
+    return selectedTickets.reduce((total, ticket) => {
+      return total + ticket.amount * ticket.price
     }, 0)
   }
   return (
@@ -33,29 +40,29 @@ const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, ev
         <span className='font-bold text-base'>Thông tin nhận vé</span>
         <div className="flex justify-between items-center">
           <span className='text-[#526876] font-normal'>Tên</span>
-          <span className='text-[#1B1B1B] font-semibold'>{user.name || ''}</span>
+          <span className='text-[#1B1B1B] font-semibold'>{name || ''}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className='text-[#526876] font-normal'>Email</span>
-          <span className='text-[#1B1B1B] font-semibold'>{user.email || ''}</span>
+          <span className='text-[#1B1B1B] font-semibold'>{mail || ''}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className='text-[#526876] font-normal'>Điện thoại</span>
-          <span className='text-[#1B1B1B] font-semibold'>{user.phone || ''}</span>
+          <span className='text-[#1B1B1B] font-semibold'>{phone || ''}</span>
         </div>
       </div>
       
       <hr className="border-t border-[#B2BCC2] border-dashed" />
 
       <div className='space-y-2'>
-        <span className='font-bold text-base'>Phương thức thanh toán</span>
+        <span className='font-bold text-base'>Hình thức thanh toán</span>
         <label className='block cursor-not-allowed text-[#526876] font-normal'>
-          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="direct" disabled checked={payment.method === 1}/>
-          Trực tiếp
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="momo" disabled checked={paymentMethod === "momo"}/>
+          Momo
         </label>
         <label className='block cursor-not-allowed text-[#526876] font-normal'>
-          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="online" disabled checked={payment.method === 2}/>
-          Trực tuyến
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="visa" disabled checked={paymentMethod === "visa"}/>
+          ZaloPay
         </label>
       </div>
       
@@ -63,15 +70,12 @@ const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, ev
 
       <div className='space-y-2'>
         <span className='font-bold text-base'>Loại vé</span>
-        {tickets.map((ticket) => {
-          const selectedTicket = selectedTickets.find(
-            (t) => t.ticket_id === ticket.ticket_id
-          )
-          if(selectedTicket?.amount > 0) {
+        {selectedTickets.map((ticket) => {
+          if(ticket.amount > 0) {
             return (
             <div key={ticket.ticket_id} className="flex justify-between">
-              <span className='text-[#526876] font-normal'>{ticket.name} x{selectedTicket.amount}</span>
-              <span className='text-[#1B1B1B] font-semibold'>{(selectedTicket.amount * ticket.price).toLocaleString()} đ</span>
+              <span className='text-[#526876] font-normal'>{ticket.name} x{ticket.amount}</span>
+              <span className='text-[#1B1B1B] font-semibold'>{(ticket.amount * ticket.price).toLocaleString()} đ</span>
             </div>
             )
           }
@@ -83,14 +87,16 @@ const OrderSummary = ({ currentStep, selectedTickets, tickets, user, payment, ev
         <span className='text-[#0F2C40] font-bold text-xl'>{calculateTotal().toLocaleString()} đ</span>
       </div>
 
-      <button
-        className={`w-full p-3 rounded-lg font-bold ${
-          currentStep === 2 ? 'bg-[#219ce4] text-[#FAFAFA] cursor-pointer' : 'bg-[#F3F3F3] text-[#B2BCC2] cursor-not-allowed'
+      <div
+        className={`w-full p-3 rounded-lg font-bold text-center ${
+          currentStep === 2 ?
+            'bg-[#219ce4] text-[#FAFAFA] cursor-pointer hover:bg-sky-400'
+            : 'bg-[#F3F3F3] text-[#B2BCC2] cursor-not-allowed'
         }`}
         disabled={currentStep !== 2}
       >
         Mua ngay
-      </button>
+      </div>
     </div>
   )
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { fetchDistricts, fetchProvinces, fetchWards } from "../../../controllers/provinceController";
 import { useFormContext } from "react-hook-form";
 
-const FirstStep = ({ selectedLocation, setSelectedLocation }) => {
+const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewChange, bannerPreview, logoPreview }) => {
   const { register, setValue, formState: { errors } } = useFormContext()
   const [locations, setLocations] = useState({
     provinces: [],
@@ -49,20 +49,6 @@ const FirstStep = ({ selectedLocation, setSelectedLocation }) => {
     }
   }, [selectedLocation.district])
 
-  const [bannerPreview, setBannerPreview] = useState(null);
-  const [logoPreview, setlogoPreview] = useState(null);
-  const handleFileChange = (event, type) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (type === "banner") setBannerPreview(reader.result)
-        if (type === "logo") setlogoPreview(reader.result)
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
   return (
     <div className='flex flex-col gap-4 text-sm font-normal text-[#1b1b1b]'>
       <div className='text-[#1B1B1B] text-xl font-extrabold'>Thông tin sự kiện</div>
@@ -72,10 +58,10 @@ const FirstStep = ({ selectedLocation, setSelectedLocation }) => {
           <span className="text-red-500">*</span>
           <span>Upload hình ảnh</span>
         </div>
-        <div className="flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-56 p-2">
-          {bannerPreview ? (
+        <div className="relative flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-56 p-2">
+          {bannerPreview?.url ? (
             <img
-              src={bannerPreview}
+              src={bannerPreview.url}
               alt="Banner Preview"
               className="object-contain w-full h-full"
             />
@@ -83,14 +69,14 @@ const FirstStep = ({ selectedLocation, setSelectedLocation }) => {
             <label className="flex flex-col gap-1 items-center cursor-pointer">
               <img src="/assets/icons/plus.svg" alt="plus" />
               <span className="text-base font-semibold text-[#B2BCC2]">Thêm ảnh nền sự kiện</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileChange(e, "banner")}
-                className="hidden"
-              />
             </label>
           )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleEventPreviewChange(e, "banner")}
+            className="absolute inset-0 opacity-0 cursor-pointer"
+          />
         </div>
       </div>
       
@@ -261,10 +247,10 @@ const FirstStep = ({ selectedLocation, setSelectedLocation }) => {
             <span className="text-red-500">*</span>
             <span>Logo</span>
           </div>
-          <div className="flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-64 p-2">
-            {logoPreview ? (
+          <div className="relative flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-64 p-2">
+            {logoPreview?.url ? (
               <img
-                src={logoPreview}
+                src={logoPreview?.url}
                 alt="Logo Preview"
                 className="object-contain w-full h-full"
               />
@@ -272,14 +258,14 @@ const FirstStep = ({ selectedLocation, setSelectedLocation }) => {
               <label className="flex flex-col gap-1 items-center cursor-pointer">
                 <img src="/assets/icons/plus.svg" alt="plus" />
                 <span className="text-base font-semibold text-[#B2BCC2]">Thêm logo ban tổ chức</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(e, "logo")}
-                  className="hidden"
-                />
               </label>
             )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleEventPreviewChange(e, "logo")}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+            />
           </div>
         </div>
         <div className="flex flex-col gap-8 flex-[2]">

@@ -21,4 +21,12 @@ export const createEvent = async (event) => {
     const { data, error } = await supabase.from("events").insert(event);
     if (error) throw error;
     return data;
-};
+}
+
+export const uploadImage = async (file, id_folder, id_image) => {
+    const { data, error } = await supabase.storage
+      .from("test")
+      .upload(id_folder + "/" + id_image, file);
+    if (error) throw error;
+    return data;
+}

@@ -10,43 +10,84 @@ import ThirdStep from './ui/booking/third-step'
 import { useParams } from 'react-router-dom'
 import { fetchEventById } from '../controllers/eventController'
 
+const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
+
 export default function Booking() {
-  const { event_id, show_id } = useParams()
+  const [currentStep, setCurrentStep] = useState(0)
   const [eventFindById, setEvent] = useState([])
+  const [selectedTickets, setSelectedTickets] = useState([])
+  const [user, setUser] = useState({
+    province: '',
+    district: '',
+    ward: '',
+  })
+
+  const methods = useForm({
+    defaultValues: {
+      name: 'a',
+      mail: 'a',
+      phone: 'a',
+      location: {
+        province: user.province,
+        district: user.district,
+        ward: user.ward,
+        address: 'a',
+      }
+    }
+  })
+
+  const { event_id, show_id } = useParams()
+  const event = eventFindById[0]
+  const tickets = event?.shows?.find(show => show.show_id === Number(show_id))?.ticket_types || [];
+  const fixedQuestions = event?.fixed_questions || []
+  const dynamicQuestions = event?.dynamic_questions || []
+
   useEffect(() => {
     const fetchEventData = async () => {
       const eventData = await fetchEventById(event_id)
       setEvent(eventData)
     }
     fetchEventData()
+    methods.setValue('user_id', 1)
+    methods.setValue('event_id', event_id)
+    methods.setValue('show_id', show_id)
   }, [])
-  const event = eventFindById[0]
-  const tickets = event?.shows?.find(show => show.show_id === Number(show_id))?.ticket_types || [];
-  const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
-  const [currentStep, setCurrentStep] = useState(0)
-  const [payment, setPayment] = useState({ method: 0, option: 0 })
-  const [selectedTickets, setSelectedTickets] = useState([])
-  const [error, setError] = useState('')
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    city: '',
-    district: '',
-    ward: '',
-  })
-  const methods = useForm({
-    defaultValues: user
-  })
 
   useEffect(() => {
     const initialSelectedTickets = tickets.map((ticket) => ({
       ticket_id: ticket.ticket_id,
       amount: 0,
       max: ticket.amount,
-    }));
-    setSelectedTickets(initialSelectedTickets);
-  }, [tickets]);
+      price: ticket.price,
+      name: ticket.name,
+      description: ticket.description,
+    }))
+    setSelectedTickets(initialSelectedTickets)
+  }, [tickets])
+
+  useEffect(() => {
+    dynamicQuestions?.forEach((dynamic, dynamicIndex) => {
+      methods.setValue(`answers.${dynamicIndex}.question`, dynamic.question);
+      if (dynamic.type === "text" || dynamic.type === "radio") {
+        methods.setValue(`answers.${dynamicIndex}.answer`, ['']);
+      } else if (dynamic.type === "select") {
+        methods.setValue(
+          `answers.${dynamicIndex}.answer`,
+          dynamic.answer.map(() => '')
+        );
+      }
+    });
+  }, [dynamicQuestions]);
+
+  useEffect(() => {
+    methods.setValue(
+      "tickets",
+      selectedTickets.map(ticket => ({
+        ticket_id: ticket.ticket_id,
+        buy_amount: ticket.amount,
+      }))
+    );
+  }, [selectedTickets]);
 
   const goToNextStep = async() => {
     if (currentStep === 0) {
@@ -55,41 +96,55 @@ export default function Booking() {
         0
       )
       if (totalTickets === 0) {
-        setError('Vui lòng chọn vé để tiếp tục.')
+        methods.setError("formError", {
+          type: "manual",
+          message: "Vui lòng chọn vé để tiếp tục.",
+        })
         return
       }
     }
-  
     if (currentStep === 1) {
-      const isValid = await trigger()
+      const isValid = await methods.trigger()
       if (!isValid) {
-        setError('Vui lòng điền đầy đủ thông tin trước khi tiếp tục.')
+        methods.setError("formError", {
+          type: "manual",
+          message: "Vui lòng điền đầy đủ thông tin trước khi tiếp tục.",
+        })
         return
       }
     }
   
-    setError('')
+    methods.clearErrors("formError")
     setCurrentStep((prevStep) => Math.min(prevStep + 1, 2))
   }
   
   const goToPreviousStep = () => {
-    setError('')
+    methods.clearErrors("formError")
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
+  }
+  const handleBooking = (dataForm) => {
+    const convertedData = {
+      ...dataForm,
+      event_id: parseInt(dataForm.event_id),
+      show_id: parseInt(dataForm.show_id),
+    }
+    console.log(convertedData)
   }
   const debug = () => {
     const debuggg = methods.getValues()
     console.log(debuggg)
   }
   const Button = () => {
+    const error = methods.formState.errors?.formError?.message
     return (
       <div>
-        {error && <div className="text-red-500 mb-3 text-center">{error}</div>}
+        <p className="text-red-500 text-base text-center mb-3">{error}</p>
         <div className="flex justify-between text-[#FAFAFA]">
           <div>
-            {currentStep > 0 && <button className='bg-[#b2bcc2] p-2 rounded-lg' onClick={goToPreviousStep}>Quay lại</button>}
+            {currentStep > 0 && <div className='bg-[#b2bcc2] p-2 rounded-lg cursor-pointer hover:bg-slate-400' onClick={goToPreviousStep}>Quay lại</div>}
           </div>
           <div>
-            {currentStep < 2 && <button className='bg-[#219ce4] p-2 rounded-lg' onClick={goToNextStep}>Tiếp theo</button>}
+            {currentStep < 2 && <div className='bg-[#219ce4] p-2 rounded-lg cursor-pointer hover:bg-sky-400' onClick={goToNextStep}>Tiếp theo</div>}
           </div>
         </div>
       </div>
@@ -109,26 +164,24 @@ export default function Booking() {
                   <FirstStep
                     selectedTickets={selectedTickets}
                     setSelectedTickets={setSelectedTickets}
-                    tickets={tickets}
                   />
                 }
                 {currentStep == 1 &&
                   <SecondStep
                     user={user}
                     setUser={setUser}
+                    fixedQuestions={fixedQuestions}
+                    dynamicQuestions={dynamicQuestions}
                   />
                 }
                 {currentStep == 2 &&
-                  <ThirdStep
-                    payment={payment}
-                    setPayment={setPayment}
-                  />
+                  <ThirdStep/>
                 }
                 <button className="text-black" onClick={debug}>debug</button>
                 <Button/>
               </div>
             </div>
-            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} tickets={tickets} user={user} payment={payment} event={event}/>
+            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} tickets={tickets} event={event}/>
           </FormProvider>
         </div>
       </div>

@@ -3,27 +3,31 @@
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import Button from '../shared/button'
 
-const SecondStep = ({ shows, setShows }) => {
+const SecondStep = ({ shows, setShows, showsPreview, setShowsPreview, handleShowsPreviewChange }) => {
   return (
     <div className='flex flex-col gap-4 text-sm font-normal text-[#1b1b1b]'>
         <div className='text-[#1B1B1B] text-xl font-extrabold'>Thời gian & loại vé</div>
-        <ManageShows shows={shows} setShows={setShows}/>
+        <ManageShows
+          shows={shows}
+          setShows={setShows}
+          showsPreview={showsPreview}
+          setShowsPreview={setShowsPreview}
+          handleShowsPreviewChange={handleShowsPreviewChange}
+        />
     </div>
   )
 }
 
-const ManageShows = ({ shows, setShows }) => {
+const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleShowsPreviewChange }) => {
   const { register, control, formState: { errors } } = useFormContext()
   const { append, remove, fields } = useFieldArray({
     name: 'shows',
     control,
   })
   const handleRemoveAllShow = () => {
-    setShows((prev) => ({
-      ...prev,
-      show_counter: 0
-    }))
+    setShows((prev) => ({ ...prev, show_counter: 0 }))
     remove()
+    setShowsPreview([])
   }
   const handleAddShow = () => {
     append({ show_id: shows.show_current_id, ticket_types: [] })
@@ -32,31 +36,47 @@ const ManageShows = ({ shows, setShows }) => {
       show_counter: prev.show_counter + 1,
       show_current_id: prev.show_current_id + 1
     }))
+    setShowsPreview((prev) => [...prev, null])
   }
   return (
     <div className='flex flex-col gap-4'>
-        <div className='flex items-center justify-between'>
-            <div className='text-base font-bold'>Tổng buổi diễn: {shows.show_counter}</div>
-            <div className='flex gap-6 items-center'>
-                {fields.length > 0 && (
-                <div className='flex gap-6 items-center'>
-                  <div
-                      onClick={handleRemoveAllShow}
-                      className='text-center text-[#ff4d4f] underline underline-offset-4 cursor-pointer hover:text-red-300'
-                  >
-                      Xoá tất cả
-                  </div>
-                  <div className='text-base'>|</div>
-                </div>
-                )}
-                <div
-                  onClick={handleAddShow}
-                  className='text-center text-[#219ce4] underline underline-offset-4 cursor-pointer hover:text-sky-300'
-                >
-                  Thêm buổi diễn
-                </div>
-            </div>
+      <div>
+        <div className="flex gap-2 mb-2 font-semibold">
+          <span className="text-red-500">*</span>
+          <span>Yêu cầu hủy vé</span>
         </div>
+        <select
+          className='w-full p-2 border border-[#219ce4] rounded-lg'
+          {...register('cancel_request', {
+            required: 'Chọn 1 hình thức',
+          })}
+        >
+          <option value="0">Không cho phép hủy vé</option>
+          <option value="2">Cho phép hủy trong vòng 2 giờ sau khi mua</option>
+        </select>
+      </div>
+      <div className='flex items-center justify-between'>
+          <div className='text-base font-bold'>Tổng buổi diễn: {shows.show_counter}</div>
+          <div className='flex gap-6 items-center'>
+              {fields.length > 0 && (
+              <div className='flex gap-6 items-center'>
+                <div
+                    onClick={handleRemoveAllShow}
+                    className='text-center text-[#ff4d4f] underline underline-offset-4 cursor-pointer hover:text-red-300'
+                >
+                    Xoá tất cả
+                </div>
+                <div className='text-base'>|</div>
+              </div>
+              )}
+              <div
+                onClick={handleAddShow}
+                className='text-center text-[#219ce4] underline underline-offset-4 cursor-pointer hover:text-sky-300'
+              >
+                Thêm buổi diễn
+              </div>
+          </div>
+      </div>
       {fields.map((show, showIndex) => {
         return (
           <div
@@ -73,6 +93,7 @@ const ManageShows = ({ shows, setShows }) => {
                       ...prev,
                       show_counter: prev.show_counter - 1,
                     }))
+                    setShowsPreview((prev) => prev.filter((_, i) => i !== showIndex))
                 }}
                 className='text-center rounded-lg font-bold text-[#FAFAFA] bg-[#ff4d4f] py-1 px-3 cursor-pointer hover:bg-red-600'
               >
@@ -144,6 +165,32 @@ const ManageShows = ({ shows, setShows }) => {
                       {...register(`shows.${showIndex}.description`, {required: 'Thông tin thêm là bắt buộc'})}
                   />
                   <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.description?.message}</p>
+              </div>
+            </div>
+            <div>
+              <div className="flex gap-2 mb-2 font-semibold">
+                <span className="text-red-500">*</span>
+                <span>Upload hình ảnh</span>
+              </div>
+              <div className="relative flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-56 p-2">
+                {showsPreview[showIndex]?.url ? (
+                  <img
+                    src={showsPreview[showIndex].url}
+                    alt="Show Preview"
+                    className="object-contain w-full h-full"
+                  />
+                ) : (
+                  <label className="flex flex-col gap-1 items-center cursor-pointer">
+                    <img src="/assets/icons/plus.svg" alt="plus" />
+                    <span className="text-base font-semibold text-[#B2BCC2]">Thêm ảnh mô tả buổi diễn</span>
+                  </label>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleShowsPreviewChange(e, showIndex)}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
               </div>
             </div>
             <ManageTickets showIndex={showIndex} shows={shows} setShows={setShows} />
