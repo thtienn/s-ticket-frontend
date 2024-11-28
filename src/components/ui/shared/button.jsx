@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Button({ title, bgColor, textColor, icon, isActive, onClick }) {
+export default function Button({ title, bgColor, textColor, icon, isActive, onClick, style }) {
     return (
         <div 
             className={`flex py-[10px] pl-[14px] pr-3 items-center justify-center gap-[6px] rounded-lg hover:cursor-pointer ${
