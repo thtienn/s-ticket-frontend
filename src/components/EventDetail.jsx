@@ -9,24 +9,23 @@ import { useEffect, useState } from 'react';
 import { fetchEventById } from '../controllers/eventController';
 
 export default function EventDetail() {
-    const [event, setEvent] = useState([])
+    const [event, setEvent] = useState(null)
     const { id } = useParams()
     useEffect(() => {
         const fetchEventData = async () => {
           const eventData = await fetchEventById(id)
-          setEvent(eventData)
+          setEvent(eventData[0])
         }
         fetchEventData()
     }, [])
     return (
         <div className="relative flex flex-col bg-[#fafafa] w-full overflow-x-hidden">
-            <Header />
             <main className="flex-grow items-center justify-center w-full overflow-x-hidden">
-                <Banner event={event[0]} />
+                <Banner event={event} />
                 <div className='flex flex-col gap-12 w-full py-12 p-32'>
-                    <EventDescription event={event[0]} />
-                    <EventList event={event[0]} />
-                    <OrganizerInfo event={event[0]} />
+                    <EventDescription event={event} />
+                    <EventList event={event} />
+                    <OrganizerInfo event={event} />
                 </div>
             </main>
             <Footer />

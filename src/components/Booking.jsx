@@ -130,10 +130,6 @@ export default function Booking() {
     }
     console.log(convertedData)
   }
-  const debug = () => {
-    const debuggg = methods.getValues()
-    console.log(debuggg)
-  }
   const Button = () => {
     const error = methods.formState.errors?.formError?.message
     return (
@@ -152,9 +148,8 @@ export default function Booking() {
   }
 
   return (
-    <div className='flex flex-col w-full font-sans'>
-      <div className='flex flex-col h-screen'>
-        <Header/>
+    <div className='flex flex-col w-full font-sans text-start'>
+      <div className='flex flex-col h-full'>
         <div className='flex flex-1 min-h-0 overflow-auto'>
           <SidebarStep currentStep={currentStep} steps={steps}/>
           <FormProvider {...methods}>
@@ -177,11 +172,10 @@ export default function Booking() {
                 {currentStep == 2 &&
                   <ThirdStep/>
                 }
-                <button className="text-black" onClick={debug}>debug</button>
                 <Button/>
               </div>
             </div>
-            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} tickets={tickets} event={event}/>
+            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} event={event}/>
           </FormProvider>
         </div>
       </div>

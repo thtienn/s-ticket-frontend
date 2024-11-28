@@ -190,15 +190,11 @@ export default function AddEvent() {
           </div>
         )
     }
-    const debug = () => {
-      const debuggg = methods.getValues()
-      console.log(debuggg)
-    }
+
     const steps = ["Thông tin sự kiện", "Thời gian & loại vé", "Thông tin đăng ký", "Thông tin thanh toán"]
     return (
-        <div className='flex flex-col w-full font-sans'>
-            <div className='flex flex-col h-full min-h-screen'>
-                <Header/>
+        <div className='flex flex-col w-full font-sans text-start'>
+            <div className='flex flex-col h-full'>
                 <div className='flex flex-1 min-h-0 overflow-auto'>
                 <SidebarStep currentStep={currentStep} steps={steps}/>
                 <FormProvider {...methods}>
@@ -228,7 +224,6 @@ export default function AddEvent() {
                     {currentStep == 3 &&
                       <FourthStep />
                     }
-                    <button className="text-black" onClick={debug}>debug</button>
                     <Button/>
                     </div>
                 </div>

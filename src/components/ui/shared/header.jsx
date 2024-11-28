@@ -43,9 +43,10 @@ export default function Header() {
     const location = useLocation();
     const [session, setSession] = useState(null);
 
-    const navigateToLogin = () => {
-        navigate('/login');
-    };
+    const handleNavigate = (nav) => () => {
+        window.scrollTo(0, 0);
+        navigate(`/${nav}`)
+    }
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -143,7 +144,7 @@ export default function Header() {
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-8">
-                    <Button title={'Tạo sự kiện'} bgColor={'#219ce4'} textColor={'#fafafa'} icon={'add-circle'} isActive />
+                    <Button title={'Tạo sự kiện'} bgColor={'#219ce4'} textColor={'#fafafa'} icon={'add-circle'} isActive onClick={handleNavigate('add-event')} />
                     <div className="flex flex-row items-center gap-6">
                         {session ? (
                             <>
@@ -152,7 +153,7 @@ export default function Header() {
                             </>
                         ) : (
                             <>
-                                <Button title={'Đăng nhập'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={navigateToLogin} />
+                                <Button title={'Đăng nhập'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={handleNavigate('login')} />
                                 <div className="bg-black w-[1px] h-4"></div>
                                 <Button title={'Đăng ký'} bgColor={'#fafafa'} textColor={'#1b1b1b'} />
                             </>

@@ -10,6 +10,7 @@ import './App.css';
 import Admin from './components/admin/admin';
 import ManageEvents from './components/admin/manage-events';
 import ManageUsers from './components/admin/manage-users';
+import EventDetail from './components/EventDetail';
 
 const App = () => {
   return (
@@ -19,7 +20,8 @@ const App = () => {
         <div className='relative w-full'>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/ticket-details/:id" element={<TicketDetails />} />
+            {/* <Route path="/ticket-details/:id" element={<TicketDetails />} /> */}
+            <Route path="/ticket-details/:id" element={<EventDetail />} />
             <Route path="/booking/:event_id/:show_id" element={<Booking />} />
             <Route path="/add-event" element={<AddEvent />} />
             <Route path="/user-list" element={<UserList />} />

@@ -4,7 +4,8 @@ export default function Button({ title, bgColor, textColor, icon, isActive, onCl
     return (
         <div 
             className={`flex py-[10px] pl-[14px] pr-3 items-center justify-center gap-[6px] rounded-lg hover:cursor-pointer ${
-                isActive ? 'bg-[#b2bcc2]' : ''}`} 
+                isActive ? 'bg-[#b2bcc2]' : ''
+            } ${style ? style : ''}`} 
             style={{ backgroundColor: bgColor, color: textColor }}
             onClick={onClick}
         >
