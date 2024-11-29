@@ -12,7 +12,7 @@ export const getAllEvents = async () => {
 }
 
 export const getEventById = async (id) => {
-    const { data, error } = await supabase.from("events").select().eq("id", id)
+    const { data, error } = await supabase.from("events").select().eq("id", id).single()
     if (error) throw error
     return data
 }

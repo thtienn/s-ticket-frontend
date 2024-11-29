@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import SidebarStep from './ui/shared/sidebar-step'
 import OrderSummary from './ui/booking/order-summary'
-import Header from './ui/shared/header'
 import Footer from './ui/shared/footer'
 import { FormProvider, useForm } from 'react-hook-form'
 import FirstStep from './ui/booking/first-step'
@@ -9,12 +8,13 @@ import SecondStep from './ui/booking/second-step'
 import ThirdStep from './ui/booking/third-step'
 import { useParams } from 'react-router-dom'
 import { fetchEventById } from '../controllers/eventController'
+import { fetchUser } from '../controllers/userController'
 
 const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
 
 export default function Booking() {
   const [currentStep, setCurrentStep] = useState(0)
-  const [eventFindById, setEvent] = useState([])
+  const [event, setEvent] = useState(null)
   const [selectedTickets, setSelectedTickets] = useState([])
   const [user, setUser] = useState({
     province: '',
@@ -24,36 +24,43 @@ export default function Booking() {
 
   const methods = useForm({
     defaultValues: {
-      name: 'a',
-      mail: 'a',
-      phone: 'a',
+      user_id: 0,
+      name: '',
+      email: '',
+      phone: '',
       location: {
         province: user.province,
         district: user.district,
         ward: user.ward,
-        address: 'a',
+        address: '',
       }
     }
   })
 
   const { event_id, show_id } = useParams()
-  const event = eventFindById[0]
-  const tickets = event?.shows?.find(show => show.show_id === Number(show_id))?.ticket_types || [];
-  const fixedQuestions = event?.fixed_questions || []
-  const dynamicQuestions = event?.dynamic_questions || []
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = await fetchUser()
+      if(userData) {
+        methods.setValue('name', userData.name)
+        methods.setValue('email', userData.email)
+        methods.setValue('phone', userData.phone)
+        methods.setValue('user_id', userData.id)
+      }
+    }
     const fetchEventData = async () => {
       const eventData = await fetchEventById(event_id)
       setEvent(eventData)
     }
+    fetchUserData()
     fetchEventData()
-    methods.setValue('user_id', 1)
     methods.setValue('event_id', event_id)
     methods.setValue('show_id', show_id)
   }, [])
 
   useEffect(() => {
+    const tickets = event?.shows?.find(show => show.show_id === Number(show_id))?.ticket_types || [];
     const initialSelectedTickets = tickets.map((ticket) => ({
       ticket_id: ticket.ticket_id,
       amount: 0,
@@ -62,11 +69,12 @@ export default function Booking() {
       name: ticket.name,
       description: ticket.description,
     }))
-    setSelectedTickets(initialSelectedTickets)
-  }, [tickets])
+    setSelectedTickets(initialSelectedTickets);
+  }, [event])
 
   useEffect(() => {
-    dynamicQuestions?.forEach((dynamic, dynamicIndex) => {
+    const dynamicQuestions = event?.dynamic_questions || []
+    dynamicQuestions.forEach((dynamic, dynamicIndex) => {
       methods.setValue(`answers.${dynamicIndex}.question`, dynamic.question);
       if (dynamic.type === "text" || dynamic.type === "radio") {
         methods.setValue(`answers.${dynamicIndex}.answer`, ['']);
@@ -77,7 +85,7 @@ export default function Booking() {
         );
       }
     });
-  }, [dynamicQuestions]);
+  }, [event]);
 
   useEffect(() => {
     methods.setValue(
@@ -117,7 +125,6 @@ export default function Booking() {
     methods.clearErrors("formError")
     setCurrentStep((prevStep) => Math.min(prevStep + 1, 2))
   }
-  
   const goToPreviousStep = () => {
     methods.clearErrors("formError")
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
@@ -165,8 +172,8 @@ export default function Booking() {
                   <SecondStep
                     user={user}
                     setUser={setUser}
-                    fixedQuestions={fixedQuestions}
-                    dynamicQuestions={dynamicQuestions}
+                    fixedQuestions={event.fixed_questions}
+                    dynamicQuestions={event.dynamic_questions}
                   />
                 }
                 {currentStep == 2 &&

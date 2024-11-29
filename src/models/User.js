@@ -16,3 +16,13 @@ export const createUser = async (user) => {
   if (error) throw error;
   return data;
 };
+
+export const getUser = async (email) => {
+  const { data, error } = await supabase.from("users").select().eq("email", email).single()
+  if (error) throw error
+  return data
+}
+
+export const getSession = () => {
+  return supabase.auth.getSession()
+}

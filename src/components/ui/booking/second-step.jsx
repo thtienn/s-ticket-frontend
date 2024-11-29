@@ -8,7 +8,7 @@ const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
     districts: [],
     wards: [],
   })
-  const { register, handleSubmit, getValues, setValue, control, formState: { errors } } = useFormContext()
+  const { register, setValue, formState: { errors } } = useFormContext()
 
   // Lấy danh sách tỉnh/thành
   useEffect(() => {
@@ -76,7 +76,7 @@ const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
               <div className='font-semibold mb-2'>Email</div>
               <input
                 className='w-full p-2 border border-[#1B1B1B] rounded-lg'
-                {...register('mail', {required: 'Email là bắt buộc'})}
+                {...register('email', {required: 'Email là bắt buộc'})}
                 type="email"
               />
             </div>
@@ -92,7 +92,7 @@ const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
             </div>
           )}
         </div>
-        {isFixedQuestionOptional("name") && (
+        {isFixedQuestionOptional("address") && (
           <>
             <div className="flex gap-6">
               <div className='flex-1'>
@@ -194,19 +194,7 @@ const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
 }
 
 const ManageAnswers = ({ dynamic, dynamicIndex }) => {
-  const { register, setValue, getValues } = useFormContext()
-  const handleCheckboxChange = (answer, checked) => {
-    const currentAnswers = getValues(`answers.${dynamicIndex}.answer`) || [];
-    if (checked) {
-      // Add to the answer array
-      setValue(`answers.${dynamicIndex}.answer`, [...currentAnswers, answer]);
-    } else {
-      // Remove from the answer array
-      setValue(
-        `answers.${dynamicIndex}.answer`, currentAnswers.filter((item) => item !== answer)
-      )
-    }
-  };
+  const { register } = useFormContext()
   return (
     <>
       {dynamic.type === "text" ? (
@@ -249,7 +237,6 @@ const ManageAnswers = ({ dynamic, dynamicIndex }) => {
                   id={answer}
                   name={dynamicIndex}
                   value={answer}
-                  // onChange={(e) => handleCheckboxChange(answer, e.target.checked)}
                   {...register(`answers.${dynamicIndex}.answer.${answerIndex}`)}
                 />
                 {answer}

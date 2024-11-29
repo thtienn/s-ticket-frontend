@@ -99,16 +99,12 @@ export default function AddEvent() {
 
   const uploadAllImages = async (id_folder) => {
     try {
-      console.log(id_folder)
-      console.log(bannerPreview.id)
       if (bannerPreview?.file) {
         await addImage(bannerPreview.file, id_folder, bannerPreview.id);
       }
-      console.log(logoPreview.id)
       if (logoPreview?.file) {
         await addImage(logoPreview.file, id_folder, logoPreview.id);
       }
-      console.log('asd')
       for (let i = 0; i < showsPreview.length; i++) {
         const preview = showsPreview[i];
         if (preview?.file) {

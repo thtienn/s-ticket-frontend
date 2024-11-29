@@ -4,7 +4,6 @@ import EventDescription from './ui/event-detail/event-description';
 import EventList from './ui/event-detail/event-list';
 import OrganizerInfo from './ui/event-detail/organizer-info';
 import Footer from './ui/shared/footer';
-import Header from './ui/shared/header';
 import { useEffect, useState } from 'react';
 import { fetchEventById } from '../controllers/eventController';
 
@@ -14,12 +13,12 @@ export default function EventDetail() {
     useEffect(() => {
         const fetchEventData = async () => {
           const eventData = await fetchEventById(id)
-          setEvent(eventData[0])
+          setEvent(eventData)
         }
         fetchEventData()
     }, [])
     return (
-        <div className="relative flex flex-col bg-[#fafafa] w-full overflow-x-hidden">
+        <div className="relative text-start flex flex-col bg-[#fafafa] w-full overflow-x-hidden">
             <main className="flex-grow items-center justify-center w-full overflow-x-hidden">
                 <Banner event={event} />
                 <div className='flex flex-col gap-12 w-full py-12 p-32'>

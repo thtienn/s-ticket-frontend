@@ -81,7 +81,13 @@ export default function Section({ title, categoryItems, maxCards }) {
                         <div key={rowIndex} className="flex flex-row items-stretch gap-8">
                             {row.map((item) => (
                                 <div key={item.id} className="flex-1">
-                                    <EventCard event={item} onClick={() => navigate(`/ticket-details/${item.id}`)} />
+                                    <EventCard
+                                        event={item}
+                                        onClick={() => {
+                                            window.scrollTo(0, 0);
+                                            navigate(`/ticket-details/${item.id}`)
+                                        }}
+                                    />
                                 </div>
                             ))}
                         </div>

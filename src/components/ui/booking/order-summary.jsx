@@ -5,7 +5,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
   const { watch, setValue } = useFormContext()
   const paymentMethod = watch('payment_method')
   const name = watch('name')
-  const mail = watch('mail')
+  const email = watch('email')
   const phone = watch('phone')
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
         </div>
         <div className="flex justify-between items-center">
           <span className='text-[#526876] font-normal'>Email</span>
-          <span className='text-[#1B1B1B] font-semibold'>{mail || ''}</span>
+          <span className='text-[#1B1B1B] font-semibold'>{email || ''}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className='text-[#526876] font-normal'>Điện thoại</span>
@@ -82,7 +82,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
         })}
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex items-baseline justify-between">
         <span className='text-[#526876] font-normal'>Tổng tiền</span>
         <span className='text-[#0F2C40] font-bold text-xl'>{calculateTotal().toLocaleString()} đ</span>
       </div>
