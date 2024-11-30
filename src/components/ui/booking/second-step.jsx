@@ -1,54 +1,8 @@
-import React, { useEffect, useState } from "react"
-import { fetchProvinces, fetchDistricts, fetchWards } from "../../../controllers/provinceController"
+import React from "react"
 import { useFormContext } from "react-hook-form"
 
-const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
-  const [locations, setLocations] = useState({
-    provinces: [],
-    districts: [],
-    wards: [],
-  })
+const SecondStep = ({ setUser, locations, setLocations, fixedQuestions, dynamicQuestions }) => {
   const { register, setValue, formState: { errors } } = useFormContext()
-
-  // Lấy danh sách tỉnh/thành
-  useEffect(() => {
-    const fetchProvincesData = async () => {
-      const provincesData = await fetchProvinces()
-      setLocations((prev) => ({
-        ...prev,
-        provinces: provincesData,
-      }))
-    }
-    fetchProvincesData()
-  }, [])
-
-  // Lấy danh sách quận/huyện khi chọn tỉnh/thành
-  useEffect(() => {
-    if (user.province) {
-      const fetchDistrictsData = async () => {
-        const districtsData = await fetchDistricts(user.province)
-        setLocations((prev) => ({
-          ...prev,
-          districts: districtsData,
-        }))
-      }
-      fetchDistrictsData()
-    }
-  }, [user.province])
-
-  // Lấy danh sách phường/xã khi chọn quận/huyện
-  useEffect(() => {
-    if (user.district) {
-      const fetchWardsData = async () => {
-        const wardsData = await fetchWards(user.district)
-        setLocations((prev) => ({
-          ...prev,
-          wards: wardsData,
-        }))
-      }
-      fetchWardsData()
-    }
-  }, [user.district])
 
   const isFixedQuestionOptional = (questionName) => {
     return fixedQuestions.some((q) => q.question === questionName && q.optional === false)
@@ -103,19 +57,19 @@ const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
                   {...register('location.province', {
                     required: 'Tỉnh/Thành là bắt buộc',
                     onChange: (e) => {
-                      const selectedProvince = locations.provinces.find(
-                        (province) => province.name === e.target.value
-                      )
+                      // const selectedProvince = locations.provinces.find(
+                      //   (province) => province.name === e.target.value
+                      // )
                       setValue('location.district', '')
                       setValue('location.ward', '')
                       setLocations(prev => ({ ...prev, wards: [] }))
-                      setUser(prev => ({ ...prev, province: selectedProvince.code }))
+                      setUser(prev => ({ ...prev, province: e.target.value }))
                     },
                   })}
                 >
                   <option value="" disabled></option>
                   {locations.provinces.map((province) => (
-                    <option key={province.code} value={province.name}>
+                    <option key={province.code} value={province.code}>
                       {province.name}
                     </option>
                   ))}
@@ -129,17 +83,17 @@ const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
                   {...register('location.district', {
                     required: 'Quận/Huyện là bắt buộc',
                     onChange: (e) => {
-                      const selectedDistrict = locations.districts.find(
-                        (district) => district.name === e.target.value
-                      )
+                      // const selectedDistrict = locations.districts.find(
+                      //   (district) => district.name === e.target.value
+                      // )
                       setValue('location.ward', '')
-                      setUser(prev => ({ ...prev, district: selectedDistrict.code }))
+                      setUser(prev => ({ ...prev, district: e.target.value }))
                     },
                   })}
                 >
                   <option value="" disabled></option>
                   {locations.districts.map((district) => (
-                    <option key={district.code} value={district.name}>
+                    <option key={district.code} value={district.code}>
                       {district.name}
                     </option>
                   ))}
@@ -155,16 +109,16 @@ const SecondStep = ({ user, setUser, fixedQuestions, dynamicQuestions }) => {
                   {...register('location.ward', {
                     required: 'Phường/Xã là bắt buộc',
                     onChange: (e) => {
-                      const selectedWard = locations.wards.find(
-                      (ward) => ward.name === e.target.value
-                      )
-                      setUser(prev => ({ ...prev, ward: selectedWard.code }))
+                      // const selectedWard = locations.wards.find(
+                      // (ward) => ward.name === e.target.value
+                      // )
+                      setUser(prev => ({ ...prev, ward: e.target.value }))
                     },
                   })}
                 >
                   <option value="" disabled></option>
                   {locations.wards.map((ward) => (
-                    <option key={ward.code} value={ward.name}>
+                    <option key={ward.code} value={ward.code}>
                       {ward.name}
                     </option>
                   ))}

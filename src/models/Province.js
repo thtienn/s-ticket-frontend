@@ -1,6 +1,8 @@
+const provinces_url = "https://provinces.open-api.vn/api/"
+
 export const getProvinces = async () => {
     try {
-      const response = await fetch('https://provinces.open-api.vn/api/p/');
+      const response = await fetch(`${provinces_url}p/`);
       return await response.json();
     } catch (error) {
       console.error('Error fetching provinces:', error);
@@ -10,7 +12,7 @@ export const getProvinces = async () => {
   
   export const getDistricts = async (provinceId) => {
     try {
-      const response = await fetch(`https://provinces.open-api.vn/api/p/${provinceId}?depth=2`);
+      const response = await fetch(`${provinces_url}p/${provinceId}?depth=2`);
       const data = await response.json();
       return data.districts || [];
     } catch (error) {
@@ -21,7 +23,7 @@ export const getProvinces = async () => {
   
   export const getWards = async (districtId) => {
     try {
-      const response = await fetch(`https://provinces.open-api.vn/api/d/${districtId}?depth=2`);
+      const response = await fetch(`${provinces_url}d/${districtId}?depth=2`);
       const data = await response.json();
       return data.wards || [];
     } catch (error) {

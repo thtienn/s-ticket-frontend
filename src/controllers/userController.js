@@ -1,5 +1,5 @@
 // src/controllers/userController.js
-import { getAllUsers, createUser, getUser, getSession } from "../models/User";
+import { getAllUsers, createUser, getUser, getSession, updateUser } from "../models/User";
 
 export const fetchAllUsers = async () => {
   return await getAllUsers();
@@ -35,4 +35,8 @@ export const fetchUser = async () => {
     console.error("Error in fetchUser:", error);
     return null;
   }
+}
+
+export const changeInfo = async (user) => {
+  return await updateUser(user)
 }

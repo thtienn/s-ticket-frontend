@@ -9,6 +9,7 @@ import ThirdStep from './ui/booking/third-step'
 import { useParams } from 'react-router-dom'
 import { fetchEventById } from '../controllers/eventController'
 import { fetchUser } from '../controllers/userController'
+import { fetchDistricts, fetchProvinces, fetchWards } from '../controllers/provinceController'
 
 const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
 
@@ -22,6 +23,14 @@ export default function Booking() {
     ward: '',
   })
 
+  const [locations, setLocations] = useState({
+    provinces: [],
+    districts: [],
+    wards: [],
+  })
+
+  const { event_id, show_id } = useParams()
+
   const methods = useForm({
     defaultValues: {
       user_id: 0,
@@ -29,15 +38,53 @@ export default function Booking() {
       email: '',
       phone: '',
       location: {
-        province: user.province,
-        district: user.district,
-        ward: user.ward,
+        province: '',
+        district: '',
+        ward: '',
         address: '',
       }
     }
   })
 
-  const { event_id, show_id } = useParams()
+  // Lấy danh sách tỉnh/thành
+  useEffect(() => {
+    const fetchProvincesData = async () => {
+      const provincesData = await fetchProvinces()
+      setLocations((prev) => ({
+        ...prev,
+        provinces: provincesData,
+      }))
+    }
+    fetchProvincesData()
+  }, [])
+
+  // Lấy danh sách quận/huyện khi chọn tỉnh/thành
+  useEffect(() => {
+    if (user.province) {
+      const fetchDistrictsData = async () => {
+        const districtsData = await fetchDistricts(user.province)
+        setLocations((prev) => ({
+          ...prev,
+          districts: districtsData,
+        }))
+      }
+      fetchDistrictsData()
+    }
+  }, [user.province])
+
+  // Lấy danh sách phường/xã khi chọn quận/huyện
+  useEffect(() => {
+    if (user.district) {
+      const fetchWardsData = async () => {
+        const wardsData = await fetchWards(user.district)
+        setLocations((prev) => ({
+          ...prev,
+          wards: wardsData,
+        }))
+      }
+      fetchWardsData()
+    }
+  }, [user.district])
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,6 +94,16 @@ export default function Booking() {
         methods.setValue('email', userData.email)
         methods.setValue('phone', userData.phone)
         methods.setValue('user_id', userData.id)
+        methods.setValue('location.province', userData.province || '')
+        methods.setValue('location.district', userData.district || '')
+        methods.setValue('location.ward', userData.ward || '')
+        methods.setValue('location.address', userData.address || '')
+        setUser((prevUser) => ({
+          ...prevUser,
+          province: userData.province || '',
+          district: userData.district || '',
+          ward: userData.ward || '',
+        }));
       }
     }
     const fetchEventData = async () => {
@@ -170,8 +227,9 @@ export default function Booking() {
                 }
                 {currentStep == 1 &&
                   <SecondStep
-                    user={user}
                     setUser={setUser}
+                    locations={locations}
+                    setLocations={setLocations}
                     fixedQuestions={event.fixed_questions}
                     dynamicQuestions={event.dynamic_questions}
                   />

@@ -26,3 +26,9 @@ export const getUser = async (email) => {
 export const getSession = () => {
   return supabase.auth.getSession()
 }
+
+export const updateUser = async (user) => {
+  const { data, error } = await supabase.from("users").update(user).eq('id', user.id).single()
+  if (error) throw error
+  return data
+}

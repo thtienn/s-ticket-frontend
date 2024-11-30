@@ -87,16 +87,17 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
         <span className='text-[#0F2C40] font-bold text-xl'>{calculateTotal().toLocaleString()} đ</span>
       </div>
 
-      <div
+      <button
         className={`w-full p-3 rounded-lg font-bold text-center ${
           currentStep === 2 ?
             'bg-[#219ce4] text-[#FAFAFA] cursor-pointer hover:bg-sky-400'
             : 'bg-[#F3F3F3] text-[#B2BCC2] cursor-not-allowed'
         }`}
+        onClick={() => {console.log('submit')}}
         disabled={currentStep !== 2}
       >
         Mua ngay
-      </div>
+      </button>
     </div>
   )
 }
