@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import EventCard from './event-card';
 import { useNavigate } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 function CategoryButton({ category, onClick, isActive }) {
     return (
@@ -35,20 +32,22 @@ export default function Section({ title, categoryItems, maxCards }) {
     // fetch events from database with category filtering
     useEffect(() => {
         const fetchEvents = async () => {
-            const categoryFilter = activeCategory === 'Tất cả' ? {} : { category: activeCategory }; 
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .match(categoryFilter);
+            try {
+                const response = await fetch(`${baseUrl}/event`);
 
-            if (error) {
-                console.error('Error fetching events:', error.message);
-            } else {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+    
+                const data = await response.json();
                 setEvents(data);
+            } catch (error) {
+                console.error('Error fetching events:', error.message);
             }
         };
+    
         fetchEvents();
-    }, [activeCategory]); 
+    }, [activeCategory]);    
 
     useEffect(() => {
         if (categoryItems.length > 0) {

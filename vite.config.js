@@ -9,11 +9,5 @@ export default defineConfig({
     postcss: {
       plugins: [tailwindcss()],
     },
-  },
-  server: {
-    proxy: {
-      '/': 'http://localhost:3000/event'  // Proxy requests to the backend server
-    }
   }
-
 });
