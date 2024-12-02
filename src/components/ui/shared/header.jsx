@@ -72,6 +72,7 @@ export default function Header() {
                         return;
                     }
 
+                    // navigate to admin page if user is an admin
                     if (userData && userData.role === 'admin') {
                         if (!location.pathname.startsWith('/admin')) {
                             navigate('/admin', { replace: true });
