@@ -12,22 +12,28 @@ export default function EventDetail() {
     const { id } = useParams()
     useEffect(() => {
         const fetchEventData = async () => {
-          const eventData = await fetchEventById(id)
-          setEvent(eventData)
+            const eventData = await fetchEventById(id)
+            setEvent(eventData)
         }
         fetchEventData()
     }, [])
     return (
-        <div className="relative text-start flex flex-col bg-[#fafafa] w-full overflow-x-hidden">
-            <main className="flex-grow items-center justify-center w-full overflow-x-hidden">
-                <Banner event={event} />
-                <div className='flex flex-col gap-12 w-full py-12 p-32'>
-                    <EventDescription event={event} />
-                    <EventList event={event} />
-                    <OrganizerInfo event={event} />
+        <div className="relative min-h-[100dvh] bg-[#fafafa] w-full">
+            <div className='relative z-0'>
+                <div className="h-full w-full">
+                    <main className="flex-grow flex flex-col w-full overflow-x-hidden">
+                        <Banner event={event} />
+                        {/* <div className='max-w-screen'>
+                            <div className="flex flex-col items-start gap-7 px-[120px] pt-16 relative mx-auto w-full max-w-[1440px]"> */}
+                                <EventDescription event={event} />
+                                <EventList event={event} />
+                                <OrganizerInfo event={event} />
+                            {/* </div>
+                        </div> */}
+                    </main>
+                    <Footer />
                 </div>
-            </main>
-            <Footer />
+            </div>
         </div>
     );
 }
