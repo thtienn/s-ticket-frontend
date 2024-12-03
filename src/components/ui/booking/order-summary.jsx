@@ -9,11 +9,11 @@ const OrderSummary = ({ currentStep, selectedTickets, event, handleBooking }) =>
   const phone = watch('phone')
   const start_time = watch('start_time')
   const start_date = watch('start_date')
-  const formattedDate = (date) => {
+  const formattedDate = () => {
     if(start_date) {
       const options = { day: '2-digit', month: 'long', year: 'numeric' }
       const formatter = new Intl.DateTimeFormat('vi-VN', options)
-      return formatter.format(new Date(date));
+      return formatter.format(new Date(start_date));
     }
     return ''
   }
@@ -41,7 +41,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event, handleBooking }) =>
       
       <div className="flex justify-between items-center">
         <span className='text-[#526876] font-normal'>Thời gian</span>
-        <span className='text-[#1B1B1B] font-semibold'>{`${start_time || ''}, ${formattedDate(start_date)}`}</span>
+        <span className='text-[#1B1B1B] font-semibold'>{`${start_time || ''}, ${formattedDate()}`}</span>
       </div>
 
       <hr className="border-t border-[#B2BCC2]" />

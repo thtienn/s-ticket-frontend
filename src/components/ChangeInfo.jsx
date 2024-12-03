@@ -103,7 +103,7 @@ export default function ChangeInfo() {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const { userData, sessionStatus, sessionEmail } = await fetchUser()
+            const { userData, sessionStatus } = await fetchUser()
             if(sessionStatus) {
                 if(userData) {
                     Object.keys(userData).forEach((key) => {
@@ -118,9 +118,9 @@ export default function ChangeInfo() {
                     setInitialUser(userData)
                 }
                 else {
-                    methods.setValue('email', sessionEmail)
+                    methods.setValue('email', sessionStatus?.user?.email)
                 }
-                setSession(sessionStatus)
+                setSession(true)
             }
         }
         fetchUserData()
@@ -128,8 +128,8 @@ export default function ChangeInfo() {
 
     useEffect(() => {
         if(session) {
+            const current = methods.getValues()
             if (initialUser) {
-                const current = methods.getValues()
                 const isChanged = Object.keys(current).some((key) => {
                     return current[key] !== initialUser[key];
                 });
@@ -137,7 +137,11 @@ export default function ChangeInfo() {
                 setIsFormChanged(isChanged)
             }
             else {
-                setIsFormChanged(true)
+                const isFormValid = Object.keys(current).some((key) => {
+                    return key !== "email" && current[key] !== "";
+                });
+        
+                setIsFormChanged(isFormValid);
             }
         }
     }, [formValues, initialUser]);

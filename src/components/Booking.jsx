@@ -25,6 +25,7 @@ export default function Booking() {
   const [currentStep, setCurrentStep] = useState(0)
   const [event, setEvent] = useState(null)
   const [selectedTickets, setSelectedTickets] = useState([])
+  const [session, setSession] = useState(false)
   const [user, setUser] = useState({
     province: '',
     district: '',
@@ -96,22 +97,26 @@ export default function Booking() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userData = await fetchUser()
-      if(userData) {
-        methods.setValue('name', userData.name)
-        methods.setValue('email', userData.email)
-        methods.setValue('phone', userData.phone)
-        methods.setValue('user_id', userData.id)
-        methods.setValue('location.province', userData.province || '')
-        methods.setValue('location.district', userData.district || '')
-        methods.setValue('location.ward', userData.ward || '')
-        methods.setValue('location.address', userData.address || '')
-        setUser((prevUser) => ({
-          ...prevUser,
-          province: userData.province || '',
-          district: userData.district || '',
-          ward: userData.ward || '',
-        }));
+      const { userData, sessionStatus } = await fetchUser()
+      if(sessionStatus) {
+        if(userData) {
+          methods.setValue('name', userData.name)
+          methods.setValue('email', userData.email)
+          methods.setValue('phone', userData.phone)
+          methods.setValue('user_id', userData.id)
+          methods.setValue('location.province', userData.province || '')
+          methods.setValue('location.district', userData.district || '')
+          methods.setValue('location.ward', userData.ward || '')
+          methods.setValue('location.address', userData.address || '')
+          setUser((prevUser) => ({
+            ...prevUser,
+            province: userData.province || '',
+            district: userData.district || '',
+            ward: userData.ward || '',
+          }));
+        }
+        methods.setValue('user_email', sessionStatus.user.email)
+        setSession(true)
       }
     }
     const fetchEventData = async () => {
@@ -122,6 +127,7 @@ export default function Booking() {
     fetchEventData()
     methods.setValue('event_id', event_id)
     methods.setValue('show_id', show_id)
+    methods.setValue('isCancelled', false)
   }, [])
 
   useEffect(() => {
@@ -160,6 +166,7 @@ export default function Booking() {
       "tickets",
       selectedTickets.map(ticket => ({
         ticket_id: ticket.ticket_id,
+        ticket_name: ticket.name,
         buy_amount: ticket.amount,
       }))
     );
@@ -220,6 +227,10 @@ export default function Booking() {
         </div>
       </div>
     )
+  }
+
+  if(!session) {
+    return <div className="text-black">User not found</div>
   }
 
   return (

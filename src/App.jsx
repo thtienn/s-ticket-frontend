@@ -12,6 +12,7 @@ import ManageEvents from './components/admin/manage-events';
 import ManageUsers from './components/admin/manage-users';
 import EventDetail from './components/EventDetail';
 import ChangeInfo from './components/ChangeInfo';
+import TicketsList from './components/TicketsList';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="/booking/:event_id/:show_id" element={<Booking />} />
             <Route path="/add-event" element={<AddEvent />} />
             <Route path="/change-info" element={<ChangeInfo />} />
+            <Route path="/my-tickets" element={<TicketsList />} />
             <Route path="/user-list" element={<UserList />} />
             <Route path="/login" element={<Login />} />
             <Route path='/admin' element={<Admin />} />

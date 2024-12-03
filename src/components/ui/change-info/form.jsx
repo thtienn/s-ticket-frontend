@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form"
 
 const Form = ({ setUser, locations, setLocations }) => {
-    const { register, setValue } = useFormContext()
+    const { register, setValue, formState: { errors } } = useFormContext()
     return (
         <div className="flex flex-col gap-4 text-[#1B1B1B] text-sm text-start">
             <div>
@@ -11,6 +11,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                 {...register('name', { required: 'Họ và tên là bắt buộc' })}
                 type="text"
                 />
+                <p className="text-red-500 text-sm">{errors?.name?.message}</p>
             </div>
             <div className="flex gap-6">
                 <div className='flex-1'>
@@ -21,6 +22,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                         {...register('email', {required: 'Email là bắt buộc'})}
                         type="email"
                     />
+                    <p className="text-red-500 text-sm">{errors?.email?.message}</p>
                 </div>
                 <div className='flex-1'>
                     <div className='font-semibold mb-2'>Điện thoại</div>
@@ -29,6 +31,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                         {...register('phone', {required: 'Số điện thoại là bắt buộc'})}
                         type="text"
                     />
+                    <p className="text-red-500 text-sm">{errors?.phone?.message}</p>
                 </div>
             </div>
             <>
@@ -58,6 +61,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                     </option>
                   ))}
                 </select>
+                <p className="text-red-500 text-sm">{errors?.province?.message}</p>
               </div>
               <div className='flex-1'>
                 <div className='font-semibold mb-2'>Quận/huyện</div>
@@ -82,6 +86,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                     </option>
                   ))}
                 </select>
+                <p className="text-red-500 text-sm">{errors?.district?.message}</p>
               </div>
             </div>
             <div className="flex gap-6">
@@ -107,6 +112,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                     </option>
                   ))}
                 </select>
+                <p className="text-red-500 text-sm">{errors?.ward?.message}</p>
               </div>
               <div className='flex-1'>
                 <div className='font-semibold mb-2'>Địa chỉ</div>
@@ -115,6 +121,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                   {...register('address', {required: 'Địa chỉ là bắt buộc'})}
                   type="text"
                 />
+                <p className="text-red-500 text-sm">{errors?.address?.message}</p>
               </div>
             </div>
             </>
