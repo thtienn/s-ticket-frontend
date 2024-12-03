@@ -79,7 +79,7 @@ export default function Header() {
 
                     const userData = await response.json();
 
-                    if (userData && userData.role === 'admin') {
+                    if (userData && userData.role === 'Admin') {
                         if (!location.pathname.startsWith('/admin')) {
                             navigate('/admin', { replace: true });
                         }
