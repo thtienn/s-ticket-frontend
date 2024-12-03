@@ -13,6 +13,14 @@ import { fetchDistricts, fetchProvinces, fetchWards } from '../controllers/provi
 
 const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
 
+function getShow(event, showId) {
+  const cancel_request = event?.cancel_request
+  const show = event?.shows?.find(show => show.show_id === Number(showId))
+  const tickets = show?.ticket_types || []
+  const start_time = show?.start_time || ''
+  const start_date = show?.start_date || ''
+  return { tickets, start_time, start_date, cancel_request }
+}
 export default function Booking() {
   const [currentStep, setCurrentStep] = useState(0)
   const [event, setEvent] = useState(null)
@@ -117,7 +125,7 @@ export default function Booking() {
   }, [])
 
   useEffect(() => {
-    const tickets = event?.shows?.find(show => show.show_id === Number(show_id))?.ticket_types || [];
+    const { tickets, start_time, start_date, cancel_request } = getShow(event, show_id)
     const initialSelectedTickets = tickets.map((ticket) => ({
       ticket_id: ticket.ticket_id,
       amount: 0,
@@ -126,7 +134,10 @@ export default function Booking() {
       name: ticket.name,
       description: ticket.description,
     }))
-    setSelectedTickets(initialSelectedTickets);
+    methods.setValue('start_time', start_time)
+    methods.setValue('start_date', start_date)
+    methods.setValue('cancel_request', cancel_request)
+    setSelectedTickets(initialSelectedTickets)
   }, [event])
 
   useEffect(() => {
@@ -154,7 +165,7 @@ export default function Booking() {
     );
   }, [selectedTickets]);
 
-  const goToNextStep = async() => {
+  const goToNextStep = async () => {
     if (currentStep === 0) {
       const totalTickets = selectedTickets.reduce(
         (sum, ticket) => sum + (ticket.amount || 0),
@@ -186,7 +197,7 @@ export default function Booking() {
     methods.clearErrors("formError")
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
   }
-  const handleBooking = (dataForm) => {
+  const handleBooking = async (dataForm) => {
     const convertedData = {
       ...dataForm,
       event_id: parseInt(dataForm.event_id),
@@ -240,7 +251,7 @@ export default function Booking() {
                 <Button/>
               </div>
             </div>
-            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} event={event}/>
+            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} event={event} handleBooking={handleBooking}/>
           </FormProvider>
         </div>
       </div>

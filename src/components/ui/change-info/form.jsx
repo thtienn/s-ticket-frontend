@@ -16,6 +16,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                 <div className='flex-1'>
                     <div className='font-semibold mb-2'>Email</div>
                     <input
+                        disabled
                         className='w-full p-2 border border-[#1B1B1B] rounded-lg'
                         {...register('email', {required: 'Email là bắt buộc'})}
                         type="email"

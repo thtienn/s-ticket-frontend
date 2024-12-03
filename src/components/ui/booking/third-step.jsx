@@ -2,7 +2,7 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 
 const ThirdStep = () => {
-  const { register, watch } = useFormContext()
+  const { register, watch, formState: { errors } } = useFormContext()
   const discount = watch('discount') || ''
   return (
     <div className='flex flex-col gap-4'>
@@ -67,6 +67,7 @@ const ThirdStep = () => {
             />
           </label>
         </div>
+        <p className="text-red-500 text-sm">{errors?.payment_method?.message}</p>
       </div>
     </div>
   )

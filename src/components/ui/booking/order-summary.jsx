@@ -1,12 +1,22 @@
 import React, { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-const OrderSummary = ({ currentStep, selectedTickets, event }) => {
-  const { watch, setValue } = useFormContext()
+const OrderSummary = ({ currentStep, selectedTickets, event, handleBooking }) => {
+  const { watch, setValue, handleSubmit } = useFormContext()
   const paymentMethod = watch('payment_method')
   const name = watch('name')
   const email = watch('email')
   const phone = watch('phone')
+  const start_time = watch('start_time')
+  const start_date = watch('start_date')
+  const formattedDate = (date) => {
+    if(start_date) {
+      const options = { day: '2-digit', month: 'long', year: 'numeric' }
+      const formatter = new Intl.DateTimeFormat('vi-VN', options)
+      return formatter.format(new Date(date));
+    }
+    return ''
+  }
 
   useEffect(() => {
     setValue(`total_price`, calculateTotal())
@@ -31,7 +41,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
       
       <div className="flex justify-between items-center">
         <span className='text-[#526876] font-normal'>Thời gian</span>
-        <span className='text-[#1B1B1B] font-semibold'>{event?.start_time || ''}</span>
+        <span className='text-[#1B1B1B] font-semibold'>{`${start_time || ''}, ${formattedDate(start_date)}`}</span>
       </div>
 
       <hr className="border-t border-[#B2BCC2]" />
@@ -93,7 +103,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
             'bg-[#219ce4] text-[#FAFAFA] cursor-pointer hover:bg-sky-400'
             : 'bg-[#F3F3F3] text-[#B2BCC2] cursor-not-allowed'
         }`}
-        onClick={() => {console.log('submit')}}
+        onClick={handleSubmit(handleBooking)}
         disabled={currentStep !== 2}
       >
         Mua ngay

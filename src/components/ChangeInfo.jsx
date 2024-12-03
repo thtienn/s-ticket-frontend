@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react"
 import { fetchDistricts, fetchProvinces, fetchWards } from "../controllers/provinceController"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
-import { fetchUser } from "../controllers/userController"
+import { addUser, fetchUser } from "../controllers/userController"
 import Form from "./ui/change-info/form"
 import Footer from "./ui/shared/footer"
 import { updateUser } from "../models/User"
 import { useNavigate } from "react-router-dom"
 
-const SubmitButton = ({ isFormChanged }) => {
+const SubmitButton = ({ isFormChanged, initialUser }) => {
     const { handleSubmit } = useFormContext()
     const navigate = useNavigate()
     const handleClick = async (dataForm) => {
         try {
             const isConfirmed = window.confirm("Bạn có chắc chắn muốn lưu thay đổi?")
             if(isConfirmed) {
-                await updateUser(dataForm)
+                if(initialUser) {
+                    await updateUser(dataForm)
+                }
+                else {
+                    await addUser(dataForm)
+                }
                 navigate("/")
             }
         }
@@ -43,6 +48,7 @@ export default function ChangeInfo() {
         district: '',
         ward: '',
     })
+    const [session, setSession] = useState(false)
     const [initialUser, setInitialUser] = useState(null)
     const [isFormChanged, setIsFormChanged] = useState(false)
     
@@ -97,35 +103,46 @@ export default function ChangeInfo() {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const userData = await fetchUser()
-            if(userData) {
-                Object.keys(userData).forEach((key) => {
-                    methods.setValue(key, userData[key]);
-                });
-                setUser((prevUser) => ({
-                    ...prevUser,
-                    province: userData.province || '',
-                    district: userData.district || '',
-                    ward: userData.ward || '',
-                }));
-                setInitialUser(userData)
+            const { userData, sessionStatus, sessionEmail } = await fetchUser()
+            if(sessionStatus) {
+                if(userData) {
+                    Object.keys(userData).forEach((key) => {
+                        methods.setValue(key, userData[key]);
+                    });
+                    setUser((prevUser) => ({
+                        ...prevUser,
+                        province: userData.province || '',
+                        district: userData.district || '',
+                        ward: userData.ward || '',
+                    }));
+                    setInitialUser(userData)
+                }
+                else {
+                    methods.setValue('email', sessionEmail)
+                }
+                setSession(sessionStatus)
             }
         }
         fetchUserData()
     }, [])
 
     useEffect(() => {
-        if (initialUser) {
-            const current = methods.getValues()
-            const isChanged = Object.keys(current).some((key) => {
-                return current[key] !== initialUser[key];
-            });
-    
-            setIsFormChanged(isChanged)
+        if(session) {
+            if (initialUser) {
+                const current = methods.getValues()
+                const isChanged = Object.keys(current).some((key) => {
+                    return current[key] !== initialUser[key];
+                });
+        
+                setIsFormChanged(isChanged)
+            }
+            else {
+                setIsFormChanged(true)
+            }
         }
     }, [formValues, initialUser]);
 
-    if(!initialUser) {
+    if(!session) {
         return <div className="text-black">User not found</div>
     }
 
@@ -140,7 +157,7 @@ export default function ChangeInfo() {
                             locations={locations}
                             setLocations={setLocations}
                         />
-                        <SubmitButton isFormChanged={isFormChanged}/>
+                        <SubmitButton isFormChanged={isFormChanged} initialUser={initialUser}/>
                     </FormProvider>
                 </div>
             </div>
