@@ -8,6 +8,7 @@ import Logo from "./logo";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const NAV_ITEMS = [
     {
@@ -61,16 +62,22 @@ export default function Header() {
                 const userEmail = session.user.email;
 
                 if (userEmail) {
-                    const { data: userData, error } = await supabase
-                        .from('users')
-                        .select('role')
-                        .eq('email', userEmail)
-                        .single();
+                    const response = await fetch(`${baseUrl}/user/validate`, {
+                        method: 'POST', 
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: userEmail
+                        }),
+                    });
 
-                    if (error) {
-                        console.error("Error fetching user data:", error);
+                    if (!response.ok) {
+                        console.error("Error fetching user data:", response);
                         return;
                     }
+
+                    const userData = await response.json();
 
                     if (userData && userData.role === 'admin') {
                         if (!location.pathname.startsWith('/admin')) {
