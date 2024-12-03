@@ -30,12 +30,10 @@ const NAV_ITEMS = [
 
 const NavItem = ({ title, icon, link, isActive }) => {
     return (
-        <div className="flex py-2 pl-3 pr-[14px] items-center justify-center gap-[6px] hover:cursor-pointer">
+        <Link to={link} className="flex py-2 pl-3 pr-[14px] items-center justify-center gap-[6px] hover:cursor-pointer">
             <img src={`/assets/icons/${icon}.svg`} alt={icon} width={14} height={14} />
-            <Link to={link}>
-                <a className={`${isActive ? 'text-[#219ce4]' : 'text-[#1b1b1b]'} text-base font-semibold`}>{title}</a>
-            </Link>
-        </div>
+            <span className={`${isActive ? 'text-[#219ce4]' : 'text-[#1b1b1b]'} text-base font-semibold`}>{title}</span>
+        </Link>
     );
 };
 
@@ -63,9 +61,9 @@ export default function Header() {
 
                 if (userEmail) {
                     const response = await fetch(`${baseUrl}/user/validate`, {
-                        method: 'POST', 
+                        method: 'POST',
                         headers: {
-                          'Content-Type': 'application/json',
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
                             email: userEmail
