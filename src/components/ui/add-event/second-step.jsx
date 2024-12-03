@@ -170,7 +170,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
             <div>
               <div className="flex gap-2 mb-2 font-semibold">
                 <span className="text-red-500">*</span>
-                <span>Upload hình ảnh</span>
+                <span>Sơ đồ chỗ ngồi</span>
               </div>
               <div className="relative flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-56 p-2">
                 {showsPreview[showIndex]?.url ? (
@@ -182,7 +182,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                 ) : (
                   <label className="flex flex-col gap-1 items-center cursor-pointer">
                     <img src="/assets/icons/plus.svg" alt="plus" />
-                    <span className="text-base font-semibold text-[#B2BCC2]">Thêm ảnh mô tả buổi diễn</span>
+                    <span className="text-base font-semibold text-[#B2BCC2]">Thêm ảnh sơ đồ chỗ ngồi</span>
                   </label>
                 )}
                 <input
@@ -287,7 +287,7 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                         <span>Mô tả vé</span>
                     </div>
                     <textarea
-                        className='w-full p-2 rounded-lg min-h-20'
+                        className='w-full p-2 rounded-lg min-h-20 text-[#1b1b1b]'
                         {...register(`shows.${showIndex}.ticket_types.${ticketIndex}.description`, {
                             required: 'Mô tả vé là bắt buộc'
                         })}

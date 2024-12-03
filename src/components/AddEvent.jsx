@@ -1,5 +1,4 @@
-import { useState } from "react"
-import Header from "./ui/shared/header"
+import { useState, useEffect } from "react"
 import SidebarStep from "./ui/shared/sidebar-step"
 import Footer from "./ui/shared/footer"
 import FirstStep from "./ui/add-event/first-step"
@@ -10,11 +9,13 @@ import { addEvent, addImage } from "../controllers/eventController"
 import FourthStep from "./ui/add-event/fourth-step"
 import { useNavigate } from "react-router-dom"
 import { v4 as uuidv4 } from 'uuid'
+import { fetchUser } from "../controllers/userController"
 
 const url_storage = "https://hjuljskjtwahvjvbtllb.supabase.co/storage/v1/object/public/test/"
 
 export default function AddEvent() {
     const [currentStep, setCurrentStep] = useState(0)
+    const [session, setSession] = useState(false)
     const [selectedLocation, setSelectedLocation] = useState({
       province: '',
       district: '',
@@ -58,6 +59,17 @@ export default function AddEvent() {
   const [bannerPreview, setBannerPreview] = useState(null);
   const [logoPreview, setlogoPreview] = useState(null);
   const [showsPreview, setShowsPreview] = useState([])
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+        const { sessionStatus } = await fetchUser()
+        if(sessionStatus) {
+            methods.setValue('email', sessionStatus?.user?.email)
+            setSession(true)
+        }
+    }
+    fetchUserData()
+  }, [])
 
   const handleEventPreviewChange = (event, type) => {
     const file = event.target.files?.[0];
@@ -120,6 +132,7 @@ export default function AddEvent() {
   }
 
     const onSubmit = (data) => {
+      window.scrollTo(0, 0);
       console.log("Dữ liệu hợp lệ:", data);
       setCurrentStep((prevStep) => Math.min(prevStep + 1, 3))
     };
@@ -166,6 +179,7 @@ export default function AddEvent() {
       methods.handleSubmit(onSubmit, onError)();
     }
     const goToPreviousStep = () => {
+      window.scrollTo(0, 0);
       setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
     }
     const Button = () => {
@@ -187,6 +201,10 @@ export default function AddEvent() {
         )
     }
 
+    if(!session) {
+      return <div className="text-black">User not found</div>
+    }
+    
     const steps = ["Thông tin sự kiện", "Thời gian & loại vé", "Thông tin đăng ký", "Thông tin thanh toán"]
     return (
         <div className='flex flex-col w-full font-sans text-start'>
@@ -195,7 +213,7 @@ export default function AddEvent() {
                 <SidebarStep currentStep={currentStep} steps={steps}/>
                 <FormProvider {...methods}>
                 <div className='w-[80%] min-w-[480px] p-4 bg-[#F3F3F3]'>
-                    <div className='flex flex-col gap-8 justify-between h-full overflow-y-auto bg-[#FAFAFA] rounded-2xl p-5'>
+                    <div className='flex flex-col gap-8 justify-between h-full min-h-[500px] overflow-y-auto bg-[#FAFAFA] rounded-2xl p-5'>
                     {currentStep == 0 &&
                       <FirstStep 
                         selectedLocation={selectedLocation}

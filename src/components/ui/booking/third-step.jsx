@@ -32,7 +32,7 @@ const ThirdStep = () => {
             </div>
           </div>
         </div>
-        <div className='font-semibold'>Phương thức thanh toán:</div>
+        <div className='font-semibold'>Hình thức thanh toán:</div>
         <div className="flex flex-col items-start gap-4 pl-5">
           <label className="cursor-pointer flex gap-4 items-center">
             <input
@@ -43,7 +43,7 @@ const ThirdStep = () => {
               value="momo"
               {...register(`payment_method`, { required: 'Vui lòng chọn hình thức thanh toán' })}
             />
-            <span>Ví MoMo</span>
+            <span>MoMo</span>
             <img
               src="/assets/icons/momo.svg"
               alt="MoMo"
@@ -59,10 +59,26 @@ const ThirdStep = () => {
               value="zalo"
               {...register(`payment_method`, { required: 'Vui lòng chọn hình thức thanh toán' })}
             />
-            <span>Ví ZaloPay</span>
+            <span>ZaloPay</span>
             <img
               src="/assets/icons/zalo-pay.svg"
               alt="ZaloPay"
+              className="h-6"
+            />
+          </label>
+          <label className="cursor-pointer flex gap-4 items-center">
+            <input
+              className='w-3 h-3'
+              type="radio"
+              id="paypal"
+              name="paymentOption"
+              value="paypal"
+              {...register(`payment_method`, { required: 'Vui lòng chọn hình thức thanh toán' })}
+            />
+            <span>PayPal</span>
+            <img
+              src="/assets/icons/paypal.svg"
+              alt="PayPal"
               className="h-6"
             />
           </label>

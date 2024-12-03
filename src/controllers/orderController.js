@@ -1,4 +1,4 @@
-import { getOrders } from "../models/Order";
+import { createOrder, getOrders } from "../models/Order";
 import { getSession } from "../models/User";
 
 export const fetchOrders = async () => {
@@ -24,3 +24,7 @@ export const fetchOrders = async () => {
       return { ordersData: null, sessionStatus: null };
     }
 }
+
+export const addOrder = async (order) => {
+  return await createOrder(order);
+};

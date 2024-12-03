@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-const OrderSummary = ({ currentStep, selectedTickets, event, handleBooking }) => {
+const OrderSummary = ({ currentStep, selectedTickets, event, onClick }) => {
   const { watch, setValue, handleSubmit } = useFormContext()
   const paymentMethod = watch('payment_method')
   const name = watch('name')
@@ -28,7 +28,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event, handleBooking }) =>
     }, 0)
   }
   return (
-    <div className="w-[25%] min-w-64 p-4 bg-[#FAFAFA] space-y-4 text-sm text-[#1b1b1b]">
+    <div className="w-[25%] min-w-64 p-4 bg-[#FAFAFA] space-y-3 text-sm text-[#1b1b1b]">
       <span className='font-bold text-lg'>Chi tiết đơn hàng</span>
       <div className='flex items-center gap-2 p-2 border border-[#B2BCC2] rounded-lg'>
         <img
@@ -71,8 +71,12 @@ const OrderSummary = ({ currentStep, selectedTickets, event, handleBooking }) =>
           Momo
         </label>
         <label className='block cursor-not-allowed text-[#526876] font-normal'>
-          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="visa" disabled checked={paymentMethod === "visa"}/>
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="zalo" disabled checked={paymentMethod === "zalo"}/>
           ZaloPay
+        </label>
+        <label className='block cursor-not-allowed text-[#526876] font-normal'>
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="paypal" disabled checked={paymentMethod === "paypal"}/>
+          PayPal
         </label>
       </div>
       
@@ -103,7 +107,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event, handleBooking }) =>
             'bg-[#219ce4] text-[#FAFAFA] cursor-pointer hover:bg-sky-400'
             : 'bg-[#F3F3F3] text-[#B2BCC2] cursor-not-allowed'
         }`}
-        onClick={handleSubmit(handleBooking)}
+        onClick={handleSubmit(onClick)}
         disabled={currentStep !== 2}
       >
         Mua ngay

@@ -11,9 +11,9 @@ const Order = ({ order }) => {
         return order.cancel_request !== 0
     }
     return (
-        <div className="flex flex-1 w-full border border-[#1b1b1b] rounded-xl justify-between p-4 text-sm font-normal items-start">
+        <div className="flex flex-1 w-full border border-[#1b1b1b] rounded-xl justify-between p-4 text-base font-normal items-start">
             <div className="flex flex-col gap-2">
-                <div className="text-lg font-bold">{order.event_title}</div>
+                <div className="text-xl font-bold">{order.event_title}</div>
                 <div className="flex gap-2">
                     <span>Thời gian: </span>
                     <span className="font-semibold">{`${order.start_time || ''}, ${formattedDate()}`}</span>

@@ -118,6 +118,7 @@ export default function ChangeInfo() {
                     setInitialUser(userData)
                 }
                 else {
+                    methods.setValue('role', 'customer')
                     methods.setValue('email', sessionStatus?.user?.email)
                 }
                 setSession(true)
@@ -138,7 +139,7 @@ export default function ChangeInfo() {
             }
             else {
                 const isFormValid = Object.keys(current).some((key) => {
-                    return key !== "email" && current[key] !== "";
+                    return key !== "email" && key !== "role" && current[key] !== "";
                 });
         
                 setIsFormChanged(isFormValid);

@@ -10,20 +10,25 @@ import { useParams } from 'react-router-dom'
 import { fetchEventById } from '../controllers/eventController'
 import { fetchUser } from '../controllers/userController'
 import { fetchDistricts, fetchProvinces, fetchWards } from '../controllers/provinceController'
+import FourthStep from './ui/booking/fourth-step'
 
 const steps = ["Chọn vé", "Thông tin đăng ký", "Thanh toán", "Hoàn tất"]
 
 function getShow(event, showId) {
   const cancel_request = event?.cancel_request
+  const event_title = event?.title
   const show = event?.shows?.find(show => show.show_id === Number(showId))
   const tickets = show?.ticket_types || []
   const start_time = show?.start_time || ''
   const start_date = show?.start_date || ''
-  return { tickets, start_time, start_date, cancel_request }
+  const show_image = show?.image || ''
+  return { tickets, start_time, start_date, cancel_request, event_title, show_image }
 }
+
 export default function Booking() {
   const [currentStep, setCurrentStep] = useState(0)
   const [event, setEvent] = useState(null)
+  const [showImage, setShowImage] = useState('')
   const [selectedTickets, setSelectedTickets] = useState([])
   const [session, setSession] = useState(false)
   const [user, setUser] = useState({
@@ -131,7 +136,7 @@ export default function Booking() {
   }, [])
 
   useEffect(() => {
-    const { tickets, start_time, start_date, cancel_request } = getShow(event, show_id)
+    const { tickets, start_time, start_date, cancel_request, event_title, show_image } = getShow(event, show_id)
     const initialSelectedTickets = tickets.map((ticket) => ({
       ticket_id: ticket.ticket_id,
       amount: 0,
@@ -140,10 +145,12 @@ export default function Booking() {
       name: ticket.name,
       description: ticket.description,
     }))
+    methods.setValue('event_title', event_title)
     methods.setValue('start_time', start_time)
     methods.setValue('start_date', start_date)
     methods.setValue('cancel_request', cancel_request)
     setSelectedTickets(initialSelectedTickets)
+    setShowImage(show_image)
   }, [event])
 
   useEffect(() => {
@@ -198,19 +205,15 @@ export default function Booking() {
     }
   
     methods.clearErrors("formError")
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, 2))
+    window.scrollTo(0, 0);
+    const x = methods.getValues()
+    console.log(x)
+    setCurrentStep((prevStep) => Math.min(prevStep + 1, 3))
   }
   const goToPreviousStep = () => {
     methods.clearErrors("formError")
+    window.scrollTo(0, 0);
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
-  }
-  const handleBooking = async (dataForm) => {
-    const convertedData = {
-      ...dataForm,
-      event_id: parseInt(dataForm.event_id),
-      show_id: parseInt(dataForm.show_id),
-    }
-    console.log(convertedData)
   }
   const Button = () => {
     const error = methods.formState.errors?.formError?.message
@@ -240,11 +243,12 @@ export default function Booking() {
           <SidebarStep currentStep={currentStep} steps={steps}/>
           <FormProvider {...methods}>
             <div className='w-[55%] min-w-[480px] p-4 bg-[#F3F3F3]'>
-              <div className='flex flex-col gap-8 justify-between h-full overflow-y-auto bg-[#FAFAFA] rounded-2xl p-5'>
+              <div className='flex flex-col gap-8 justify-between h-full min-h-[500px] overflow-y-auto bg-[#FAFAFA] rounded-2xl p-5'>
                 {currentStep == 0 &&
                   <FirstStep
                     selectedTickets={selectedTickets}
                     setSelectedTickets={setSelectedTickets}
+                    showImage={showImage}
                   />
                 }
                 {currentStep == 1 &&
@@ -259,10 +263,13 @@ export default function Booking() {
                 {currentStep == 2 &&
                   <ThirdStep/>
                 }
+                {currentStep == 3 &&
+                  <FourthStep/>
+                }
                 <Button/>
               </div>
             </div>
-            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} event={event} handleBooking={handleBooking}/>
+            <OrderSummary currentStep={currentStep} selectedTickets={selectedTickets} event={event} onClick={goToNextStep}/>
           </FormProvider>
         </div>
       </div>

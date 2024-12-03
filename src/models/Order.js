@@ -13,3 +13,9 @@ export const getOrders = async (email) => {
     }
     return data
 }
+
+export const createOrder = async (order) => {
+  const { data, error } = await supabase.from("ordered").insert([order]);
+  if (error) throw error;
+  return data;
+};
