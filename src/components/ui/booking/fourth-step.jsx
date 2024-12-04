@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form"
 import PayPalButon from "../../payment"
 import { addOrder } from "../../../controllers/orderController"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const FourthStep = () => {
   const { getValues, handleSubmit } = useFormContext()
@@ -18,8 +19,28 @@ const FourthStep = () => {
         }
         await addOrder(convertedData)
         navigate('/')
+        toast.success('Mua vé thành công!', {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
     } catch (error) {
         console.log(error)
+        toast.error('Lỗi', {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
     }
   }
   return (

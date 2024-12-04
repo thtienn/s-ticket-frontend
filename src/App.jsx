@@ -13,6 +13,8 @@ import ManageUsers from './components/admin/manage-users';
 import EventDetail from './components/EventDetail';
 import ChangeInfo from './components/ChangeInfo';
 import TicketsList from './components/TicketsList';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   return (
@@ -20,6 +22,19 @@ const App = () => {
       <Router>
         <Header />
         <div className='relative w-full'>
+          <ToastContainer
+            className='text-start'
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover={false}
+            theme="light"
+          />
           <Routes>
             <Route path="/" element={<Home />} />
             {/* <Route path="/ticket-details/:id" element={<TicketDetails />} /> */}

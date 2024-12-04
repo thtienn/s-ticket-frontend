@@ -1,4 +1,4 @@
-import { createOrder, getOrders } from "../models/Order";
+import { cancelOrder, createOrder, getOrders } from "../models/Order";
 import { getSession } from "../models/User";
 
 export const fetchOrders = async () => {
@@ -28,3 +28,7 @@ export const fetchOrders = async () => {
 export const addOrder = async (order) => {
   return await createOrder(order);
 };
+
+export const updateStatusOrder = async (order) => {
+  return await cancelOrder(order)
+}

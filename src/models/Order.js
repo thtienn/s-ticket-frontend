@@ -19,3 +19,9 @@ export const createOrder = async (order) => {
   if (error) throw error;
   return data;
 };
+
+export const cancelOrder = async (order) => {
+  const { data, error } = await supabase.from("ordered").update({ isCancelled: true }).eq('id', order.id).single()
+  if (error) throw error
+  return data
+}

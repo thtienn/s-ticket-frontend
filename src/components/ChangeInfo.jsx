@@ -6,6 +6,7 @@ import Form from "./ui/change-info/form"
 import Footer from "./ui/shared/footer"
 import { updateUser } from "../models/User"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const SubmitButton = ({ isFormChanged, initialUser }) => {
     const { handleSubmit } = useFormContext()
@@ -21,10 +22,30 @@ const SubmitButton = ({ isFormChanged, initialUser }) => {
                     await addUser(dataForm)
                 }
                 navigate("/")
+                toast.info('Thông tin đã được thay đổi!', {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
             }
         }
         catch (error) {
             console.log(error)
+            toast.error('Lỗi', {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
         }
     }
     return (

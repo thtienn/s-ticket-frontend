@@ -10,12 +10,14 @@ import FourthStep from "./ui/add-event/fourth-step"
 import { useNavigate } from "react-router-dom"
 import { v4 as uuidv4 } from 'uuid'
 import { fetchUser } from "../controllers/userController"
+import { toast } from "react-toastify"
 
 const url_storage = "https://hjuljskjtwahvjvbtllb.supabase.co/storage/v1/object/public/test/"
 
 export default function AddEvent() {
     const [currentStep, setCurrentStep] = useState(0)
     const [session, setSession] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState({
       province: '',
       district: '',
@@ -142,6 +144,7 @@ export default function AddEvent() {
     }
     
     const handleAddEvent = async (dataForm) => {
+      setIsLoading(true);
       try {
         const id_folder = uuidv4()
         await uploadAllImages(id_folder)
@@ -170,9 +173,31 @@ export default function AddEvent() {
         }
         await addEvent(convertedData)
         navigate("/")
+        toast.info('Vui lòng chờ quản trị viên duyệt sự kiện!', {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
       catch (error) {
         console.log(error)
+        toast.error('Lỗi', {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } finally {
+        setIsLoading(false)
       }
     }
     const goToNextStep = async() => {
@@ -187,13 +212,41 @@ export default function AddEvent() {
           <div>
             <div className="flex justify-between text-[#FAFAFA]">
               <div>
-                {currentStep > 0 && <div className='bg-[#b2bcc2] p-2 rounded-lg cursor-pointer hover:bg-slate-400' onClick={goToPreviousStep}>Quay lại</div>}
+                {currentStep > 0 && <div className='text-center bg-[#b2bcc2] p-2 rounded-lg cursor-pointer hover:bg-slate-400 min-w-20' onClick={goToPreviousStep}>Quay lại</div>}
               </div>
               <div>
                 {currentStep < 3 ? (
-                  <div className='bg-[#219ce4] p-2 rounded-lg cursor-pointer hover:bg-sky-400' onClick={goToNextStep}>Tiếp theo</div>
+                  <div className='text-center bg-[#219ce4] p-2 rounded-lg cursor-pointer hover:bg-sky-400 min-w-20' onClick={goToNextStep}>Tiếp theo</div>
                 ) : (
-                  <div className='bg-[#219ce4] p-2 rounded-lg cursor-pointer hover:bg-sky-400' onClick={methods.handleSubmit(handleAddEvent)}>Hoàn tất</div>
+                  <div
+                    className='text-center bg-[#219ce4] p-2 rounded-lg cursor-pointer hover:bg-sky-400 min-w-20'
+                    onClick={!isLoading ? methods.handleSubmit(handleAddEvent) : undefined}
+                  >
+                    {isLoading ? (
+                      <svg
+                        className="animate-spin h-5 w-5 text-white inline"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                    ) : (
+                      "Hoàn tất"
+                    )}
+                  </div>
                 )}
               </div>
             </div>

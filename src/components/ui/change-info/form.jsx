@@ -18,7 +18,7 @@ const Form = ({ setUser, locations, setLocations }) => {
                     <div className='font-semibold mb-2'>Email</div>
                     <input
                         disabled
-                        className='w-full p-2 border border-[#1B1B1B] rounded-lg'
+                        className='w-full p-2 border border-[#1B1B1B] rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed'
                         {...register('email', {required: 'Email là bắt buộc'})}
                         type="email"
                     />
