@@ -22,7 +22,7 @@ const SubmitButton = ({ isFormChanged, initialUser }) => {
                     await addUser(dataForm)
                 }
                 navigate("/")
-                toast.info('Thông tin đã được thay đổi!', {
+                toast.info('Thông tin đã được cập nhật!', {
                     position: "bottom-right",
                     autoClose: 3000,
                     hideProgressBar: true,
