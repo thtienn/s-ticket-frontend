@@ -10,7 +10,7 @@ function CategoryButton({ category, onClick, isActive }) {
             className={`flex px-4 py-2 items-center rounded-[32px] border border-black ${isActive ? 'bg-[#1b1b1b] text-[#fafafa]' : 'bg-[#fafafa] text-[#1b1b1b]'}`}
             onClick={onClick}
         >
-            {category}
+            {category.text}
         </button>
     );
 }
@@ -26,14 +26,36 @@ function chunkArray(array, chunkSize) {
 export default function Section({ title, categoryItems, maxCards }) {
     const navigate = useNavigate()
 
-    const [activeCategory, setActiveCategory] = useState('Tất cả');
+    const [activeCategory, setActiveCategory] = useState({ text: 'Tất cả', value: 'All' });
     const [events, setEvents] = useState([]);
 
     // fetch events from database with category filtering
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await fetch(`${baseUrl}/event`);
+                let url = `${baseUrl}/event`;
+                let filter = {
+                    where: {
+                        status: 'APPROVED'
+                    },
+                    take: maxCards
+                }
+                if (activeCategory.value === 'All') {
+                    url += `?filter=${encodeURIComponent(JSON.stringify(filter))}`
+                } else if (activeCategory.value === 'Newest') {
+                    filter.order = {
+                        createdTime: 'DESC'
+                    }
+                    url += `?filter=${encodeURIComponent(JSON.stringify(filter))}`
+                } else if (activeCategory.value === 'Upcoming') {
+                    url += `/upcoming?filter=${encodeURIComponent(JSON.stringify(filter))}`
+                } else {
+                    filter.where.category = activeCategory.value
+                    url += `?filter=${encodeURIComponent(JSON.stringify(filter))}`
+                }
+                
+
+                const response = await fetch(url);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

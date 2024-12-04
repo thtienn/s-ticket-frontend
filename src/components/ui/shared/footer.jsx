@@ -13,10 +13,6 @@ const INFO_ITEMS = [
     {
         id: 3,
         item: 'Email: contact@sticket.com.vn'
-    },
-    {
-        id: 4,
-        item: 'Nguời chịu trách nhiệm quản lý website: Nguyễn Thái Sơn'
     }
 ]
 

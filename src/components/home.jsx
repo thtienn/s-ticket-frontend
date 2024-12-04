@@ -2,8 +2,42 @@ import Footer from './ui/shared/footer';
 import Section from './ui/home/section';
 import Carousel from './ui/home/carousel';
 
-const RECENT_CATEGORY = ['Tất cả', 'Âm nhạc', 'Thể thao', 'Seminar', 'Khác'];
-const EVENT_CATEGORY = ['Tất cả', 'Âm nhạc', 'Thể thao', 'Seminar', 'Khác'];
+const RECENT_CATEGORY = [
+    {
+        text: 'Tất cả',
+        value: 'All'
+    },
+    {
+        text: 'Mới nhất',
+        value: 'Newest'
+    }, 
+    {
+        text: 'Sắp diễn ra',
+        value: 'Upcoming'
+    }
+];
+const EVENT_CATEGORY = [
+    {
+        text: 'Tất cả',
+        value: 'All'
+    },
+    {
+        text: 'Âm nhạc',
+        value: 'Music'
+    },
+    {
+        text: 'Thể thao',
+        value: 'Sport'
+    },
+    {
+        text: 'Hội thảo',
+        value: 'Seminar'
+    },
+    {
+        text: 'Khác',
+        value: 'Other'
+    }
+];
 
 export default function Home() {
     return (

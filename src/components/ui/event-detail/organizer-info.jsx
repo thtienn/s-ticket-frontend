@@ -6,15 +6,15 @@ export default function OrganizerInfo({ event }) {
                 {/* Logo */}
                 <div className="w-20 h-20 flex-shrink-0">
                     <img
-                        src={event?.organizer.logo}
+                        src={event?.organizerImage}
                         alt={'logo'}
                         className="w-full h-full object-cover rounded-full"
                     />
                 </div>
                 {/* Organizer Details */}
                 <div>
-                    <div className="text-xl font-semibold">{event?.organizer.name}</div>
-                    <div className="text-sm mt-1">{event?.organizer.info}</div>
+                    <div className="text-xl font-semibold">{event?.organizerName}</div>
+                    <div className="text-sm mt-1">{event?.organizerDescription}</div>
                 </div>
             </div>
         </div>

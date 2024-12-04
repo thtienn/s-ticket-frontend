@@ -1,33 +1,7 @@
 import Button from "../shared/button";
 
 export default function EventCard({ event, onClick }) {
-    const getSmallestPrice = (shows) => {
-        let smallestPrice = Infinity;
-        shows.forEach(show => {
-            show.ticket_types.forEach(ticket => {
-                if (ticket.price < smallestPrice) {
-                    smallestPrice = ticket.price;
-                }
-            });
-        });
-        return smallestPrice;
-    };
-
-    const getRecentDate = (shows) => {
-        let recentDate = new Date(0);
-        // shows.forEach(show => {
-        //     const startDate = new Date(show.start_date);
-        //     if (startDate > recentDate) {
-        //         recentDate = startDate;
-        //     }
-        // });
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return recentDate.toLocaleDateString(undefined, options);
-    };
-
-    // const smallestPrice = getSmallestPrice(event.shows);
-    const recentDate = getRecentDate(event.shows);
-
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return (
         <div className="flex relative rounded-3xl min-w-[405px] max-w-[405px] min-h-[480px] border border-black bg-[#fafafa]">
             <div className="absolute top-0 inset-x-0 rounded-t-3xl">
@@ -39,11 +13,11 @@ export default function EventCard({ event, onClick }) {
                     <div className="flex flex-col items-start gap-1 text-base font-normal">
                         <div className="flex flex-row items-center gap-3">
                             <img src="/assets/icons/ticket.svg" alt="ticket" />
-                            <p>2000 VND</p>
+                            <p>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(event.price)}</p>
                         </div>
                         <div className="flex flex-row items-center gap-3">
                             <img src="/assets/icons/calendar.svg" alt="calendar" />
-                            <p>{recentDate}</p>
+                            <p>{new Date(event.date).toLocaleDateString(undefined, options)}</p>
                         </div>
                     </div>
                 </div>
