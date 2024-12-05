@@ -23,7 +23,7 @@ export default function Banner({ event }) {
         <img
           src={event?.image}
           alt="event-banner"
-          className="z-10 absolute w-[848px] h-[478px] object-cover mask"
+          className="z-10 absolute w-[850px] h-[480px] object-fill mask"
           style={{
             maskImage: 'url("/assets/ticket-frame.svg")',
             maskSize: 'cover',

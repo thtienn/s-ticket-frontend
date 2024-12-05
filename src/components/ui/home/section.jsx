@@ -39,7 +39,7 @@ export default function Section({ title, categoryItems, maxCards }) {
             const { data, error } = await supabase
                 .from('events')
                 .select('*')
-                .match(categoryFilter);
+                .match({ ...categoryFilter, approveStatus: 'approved' });
 
             if (error) {
                 console.error('Error fetching events:', error.message);

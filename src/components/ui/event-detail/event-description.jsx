@@ -17,7 +17,7 @@ export default function EventDescription({ event }) {
             <div
               className={`p-10 w-full border-black border rounded-3xl overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-[1000px]' : 'max-h-[380px]'}`}
             >
-              <div className="max-w-[1200px] text-black text-lg font-normal text-left">
+              <div className="max-w-[1200px] text-black text-lg font-normal text-left whitespace-pre-line">
                 {event?.description}
               </div>
             </div>
