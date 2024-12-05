@@ -76,7 +76,7 @@ export default function Manage() {
                                     {events.map((event, index) => (
                                         <tr key={index} className="hover:bg-gray-100">
                                             <td className="border px-4 py-2 max-w-[200px]">{event.title}</td>
-                                            <td className="border px-4 py-2">{new Date(event.shows[0].start_date).toLocaleDateString()}</td>
+                                            <td className="border px-4 py-2">{event.shows.length > 0 ? new Date(event.shows[0].start_date).toLocaleDateString() : null}</td>
                                             <td className="border px-4 py-2">{}</td>
                                             <td className="border px-4 py-2">{}</td>
                                             <td className="border px-4 py-2">{}₫</td>

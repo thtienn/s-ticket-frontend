@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createClient } from '@supabase/supabase-js';
+import { fetchUser } from "../../../controllers/userController";
 
 import Button from "./button";
 import Logo from "./logo";
@@ -55,44 +56,37 @@ export default function Header() {
 
     useEffect(() => {
         const loadSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            setSession(session);
-            if (session) {
-                const userEmail = session.user.email;
-
-                if (userEmail) {
-                    const { data: userData, error } = await supabase
-                        .from('users')
-                        .select('role')
-                        .eq('email', userEmail)
-                        .single();
-
-                    if (error) {
-                        console.error("Error fetching user data:", error);
-                        return;
+            const { userData, sessionStatus } = await fetchUser();
+    
+            setSession(sessionStatus);
+    
+            if (sessionStatus) {
+                if (!userData) {
+                    navigate('/change-info', { replace: true });
+                    return;
+                }
+    
+                const userEmail = sessionStatus.user.email;
+                const userRole = userData.role;
+    
+                if (userRole === 'admin') {
+                    if (!location.pathname.startsWith('/admin')) {
+                        navigate('/admin', { replace: true });
                     }
-
-                    // navigate to admin page if user is an admin
-                    if (userData && userData.role === 'admin') {
-                        if (!location.pathname.startsWith('/admin')) {
-                            navigate('/admin', { replace: true });
-                        }
-                    }
-                    else {
-                        if (location.pathname.startsWith('/admin')) {
-                            navigate('/', { replace: true });
-                        }
+                } else {
+                    if (location.pathname.startsWith('/admin')) {
+                        navigate('/', { replace: true });
                     }
                 }
             }
         };
-
+    
         loadSession();
-
+    
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
         });
-
+    
         return () => {
             subscription.unsubscribe();
         };
@@ -149,7 +143,9 @@ export default function Header() {
                     <div className="flex flex-row items-center gap-6">
                         {session ? (
                             <>
-                                <div className="text-[#1b1b1b]">{session.user.email}</div>
+                                {/* <div className="text-[#1b1b1b]">{session.user.email}</div> */}
+                                <Button title={'Thông tin cá nhân'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={handleNavigate('change-info')} />
+                                <div className="bg-black w-[1px] h-4"></div>
                                 <Button title={'Đăng xuất'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={handleLogout} />
                             </>
                         ) : (

@@ -15,25 +15,26 @@ export const fetchUser = async () => {
 
     if (error) {
       console.error("Error fetching session:", error);
-      return null;
+      return { userData: null, sessionStatus: null };
     }
 
     const userEmail = session?.user?.email;
     if (!userEmail) {
       console.warn("No email found in session.");
-      return null;
+      return { userData: null, sessionStatus: null };
     }
-
+    
     const user = await getUser(userEmail);
 
     if (!user) {
         console.warn("No user found with the provided email.");
+        return { userData: null, sessionStatus: session };
     }
 
-    return user;
+    return { userData: user, sessionStatus: session };
   } catch (error) {
     console.error("Error in fetchUser:", error);
-    return null;
+    return { userData: null, sessionStatus: null };
   }
 }
 

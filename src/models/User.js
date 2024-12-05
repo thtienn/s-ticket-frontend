@@ -19,7 +19,10 @@ export const createUser = async (user) => {
 
 export const getUser = async (email) => {
   const { data, error } = await supabase.from("users").select().eq("email", email).single()
-  if (error) throw error
+  if (error) {
+    console.error("Error fetching user:", error)
+    return null
+  }
   return data
 }
 

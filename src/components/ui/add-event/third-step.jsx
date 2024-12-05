@@ -212,7 +212,7 @@ const DynamicAnswer = ({ dynamicIndex }) => {
             className='w-full underline underline-offset-4 text-center cursor-pointer hover:text-sky-300'
             onClick={handleAddAnswer}
         >
-            Thêm loại vé
+            Thêm lựa chọn
         </div>
     </div>
     </div>

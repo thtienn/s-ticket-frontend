@@ -18,7 +18,8 @@ const Carousel = () => {
     const fetchEvents = async () => {
       const { data, error } = await supabase
         .from("events")
-        .select("image, shows");
+        .select("image, shows")
+        .match({ approveStatus: 'approved' });
       if (error) {
         console.error(error);
       } else {
@@ -84,7 +85,7 @@ const Carousel = () => {
                 <img
                   src={event.image}
                   alt="event-cover"
-                  className="object-fill z-0 border-8 rounded-3xl border-[#fcfcfc] border-opacity-60"
+                  className="object-cover w-[849px] h-[485px] z-0 border-8 rounded-3xl border-[#fcfcfc] border-opacity-60"
                 />
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[rgba(255,255,255,0.08)] via-[rgba(30,27,27,0.30)] to-[rgba(0,0,0,0.30)] rounded-3xl"></div>
                 <div className="absolute w-[754px] bottom-0 left-0 mx-12 mb-6 z-20 flex flex-row items-center justify-between text-base text-white font-bold">
