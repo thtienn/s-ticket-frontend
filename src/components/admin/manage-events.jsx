@@ -93,7 +93,7 @@ export default function ManageEvents() {
                 return event;
             });
             setEvents(updatedEvents);
-            handleEventStatus(activeStatus);
+            handleEventStatus("Tất cả");
         };
 
         return (

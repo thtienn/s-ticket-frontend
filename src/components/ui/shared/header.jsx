@@ -129,9 +129,9 @@ export default function Header() {
     // default header for authenticated users and guests
     return (
         <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
+            <div className="relative mx-auto flex w-full lg:max-w-[1440px] md:max-w-[1028px] flex-row items-center justify-between lg:px-12 md:px-4 py-3">
                 <div className="flex items-center gap-6">
-                    <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />
+                    <Logo image={'logo-light'} textColor={'#1b1b1b'} />
                     <div className="flex items-center gap-3">
                         {NAV_ITEMS.map((item, index) => (
                             <NavItem key={index} title={item.title} icon={item.icon} link={item.link} isActive={item.link === window.location.pathname} />
