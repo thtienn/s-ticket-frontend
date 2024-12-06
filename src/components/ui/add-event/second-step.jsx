@@ -218,18 +218,18 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
     }))
   }
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-3'>
       {fields.map((ticket, ticketIndex) => {
         return (
-          <div key={ticket.id} className='bg-[#1b1b1b] px-6 py-2 rounded-2xl text-[#219ce4]'>
-            <div className='flex flex-col gap-2'>
+          <div key={ticket.id} className='bg-[#cee7f57b] px-8 py-8 rounded-2xl text-[#219ce4]'>
+            <div className='flex flex-col gap-3'>
                 <div className='flex items-center justify-between'>
                     <div className='text-base font-bold'>Thông tin vé #{ticketIndex + 1}</div>
                     <div
                     onClick={() => {
                       remove(ticketIndex)
                     }}
-                    className='text-[#ff4d4f] bg-[#1b1b1b] text-xs text-center underline underline-offset-2 cursor-pointer hover:text-red-300'
+                    className='text-[#ff4d4f] text-xs text-center underline underline-offset-2 cursor-pointer hover:text-red-300'
                     >
                       Xóa vé
                     </div>

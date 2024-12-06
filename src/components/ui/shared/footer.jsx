@@ -60,18 +60,18 @@ const ABOUT_US_ITEMS = [
 
 export default function Footer() {
     return(
-        <div className="max-w-screen bottom-0 z-10 bg-[#1b1b1b] !text-[#fafafa]">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-start px-[108px] pt-20 pb-[200px] justify-between" >
+        <div className="max-w-screen bottom-0 z-10 bg-[#1b1b1b] !text-[#fafafa] text-left">
+            <div className="relative mx-auto flex w-full lg:max-w-[1440px] md:max-w-[1028px] flex-row items-start lg:px-[108px] md:px-[40px] pt-20 pb-[200px] justify-between" >
                 <div className="flex flex-col items-start gap-4">
                     <div className="flex flex-col items-start gap-2 -translate-x-3">
-                        <Logo image="logo" title="s-ticket" textColor={'#fafafa'} />
-                        <p className='text-xl font-bold max-w-[374px]'>
-                            HỆ THỐNG QUẢN LÝ VÀ PHÂN PHỐI VÉ DÀNH CHO HỌC SINH, SINH VIÊN
+                        <Logo image="logo-dark" textColor={'#fafafa'} />
+                        <p className='text-xl font-bold lg:max-w-[374px] md:max-w-[280px]'>
+                        HỆ THỐNG QUẢN LÝ VÀ PHÂN PHỐI VÉ DÀNH CHO HỌC SINH, SINH VIÊN
                         </p>
                     </div>
-                    <div className='flex flex-col gap-3 items-start'>
+                    <div className='flex flex-col gap-3 items-start md:max-w-[260px]'>
                         {INFO_ITEMS.map((item) => (
-                            <p key={item.id} className='text-sm font-normal'>{item.item}</p>
+                            <p key={item.id} className='text-sm font-normal -translate-x-3'>{item.item}</p>
                         ))}
                     </div>
                 </div>
