@@ -46,9 +46,6 @@ export default function ManageUsers() {
             case 'Quản trị viên':
                 filtered = users.filter(user => user.role === 'admin');
                 break;
-            case 'Ban tổ chức':
-                filtered = users.filter(user => user.role === 'organizer');
-                break;
             case 'Khách hàng':
                 filtered = users.filter(user => user.role === 'customer');
                 break;
@@ -66,15 +63,11 @@ export default function ManageUsers() {
                     className={`px-4 py-1 rounded-2xl text-xs font-semibold ${
                         role === 'customer'
                             ? 'bg-[#f2e5cf] border-2 border-[#f2ae39] text-[#f2ae39]'
-                            : role === 'organizer'
-                            ? 'bg-[#cef6d0] border-2 border-[#56d45c] text-[#56d45c]'
                             : 'bg-[#fbcccc] border-2 border-[#f87474] text-[#f87474]'
                     }`}
                 >
                     {role === 'customer'
                         ? 'Khách hàng'
-                        : role === 'organizer'
-                        ? 'Ban tổ chức'
                         : 'Quản trị viên'}
                 </div>
             )
@@ -133,7 +126,7 @@ export default function ManageUsers() {
             <div className="flex flex-col items-start gap-3 w-full py-7 px-5 text-[#1b1b1b] overflow-hidden">
                 <p className="text-2xl font-extrabold">Tất cả người dùng</p>
                 <div className="flex flex-row items-center gap-2">
-                    {['Tất cả', 'Quản trị viên', 'Ban tổ chức', 'Khách hàng'].map((role, index) => (
+                    {['Tất cả', 'Quản trị viên', 'Khách hàng'].map((role, index) => (
                         <RoleButton
                             key={index}
                             role={role}

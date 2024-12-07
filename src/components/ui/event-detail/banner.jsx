@@ -18,18 +18,21 @@ export default function Banner({ event }) {
   const eventDetails = getEventDetails(event?.shows[0]);
   return (
     <div className="relative flex w-full h-full justify-center items-center flex-shrink-0 bg-[#219ce4] py-20">
-      <div className="relative flex w-full h-full overflow-hidden mx-auto max-w-[1440px] left-10">
+      <div className="relative flex w-full h-full overflow-hidden mx-auto lg:max-w-[1440px] md:max-w-[1028px] md:px-8 lg:left-10">
         <img src="/assets/ticket-frame.svg" alt="ticket-frame" className="z-0 drop-shadow-sm" />
         <img
           src={event?.image}
           alt="event-banner"
-          className="z-10 absolute w-[848px] h-[478px] object-cover mask"
+          className="z-10 absolute lg:w-[850px] lg:h-[480px] md:w-[496px] md:h-[280px] object-fill mask"
           style={{
             maskImage: 'url("/assets/ticket-frame.svg")',
             maskSize: 'cover',
+            WebkitMaskSize: 'cover',
+            maskRepeat: 'no-repeat',
+            WebkitMaskRepeat: 'no-repeat',
           }}
         />
-        <div className="z-10 absolute flex flex-col right-24 top-8 w-[425px] h-[416px] text-left">
+        <div className="z-10 absolute flex flex-col lg:right-20 lg:top-10 lg:w-[410px] lg:h-[410px] md:top-3 md:right-12 md:h-[254px] md:w-[250px] text-left">
           <span className="text-black text-2xl font-bold mb-5">
             {event?.title}
           </span>

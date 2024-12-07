@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createClient } from '@supabase/supabase-js';
+import { fetchUser } from "../../../controllers/userController";
 
 import Button from "./button";
 import Logo from "./logo";
@@ -55,43 +56,37 @@ export default function Header() {
 
     useEffect(() => {
         const loadSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            setSession(session);
-            if (session) {
-                const userEmail = session.user.email;
-
-                if (userEmail) {
-                    const { data: userData, error } = await supabase
-                        .from('users')
-                        .select('role')
-                        .eq('email', userEmail)
-                        .single();
-
-                    if (error) {
-                        console.error("Error fetching user data:", error);
-                        return;
+            const { userData, sessionStatus } = await fetchUser();
+    
+            setSession(sessionStatus);
+    
+            if (sessionStatus) {
+                if (!userData) {
+                    navigate('/change-info', { replace: true });
+                    return;
+                }
+    
+                const userEmail = sessionStatus.user.email;
+                const userRole = userData.role;
+    
+                if (userRole === 'admin') {
+                    if (!location.pathname.startsWith('/admin')) {
+                        navigate('/admin', { replace: true });
                     }
-
-                    if (userData && userData.role === 'admin') {
-                        if (!location.pathname.startsWith('/admin')) {
-                            navigate('/admin', { replace: true });
-                        }
-                    }
-                    else {
-                        if (location.pathname.startsWith('/admin')) {
-                            navigate('/', { replace: true });
-                        }
+                } else {
+                    if (location.pathname.startsWith('/admin')) {
+                        navigate('/', { replace: true });
                     }
                 }
             }
         };
-
+    
         loadSession();
-
+    
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
         });
-
+    
         return () => {
             subscription.unsubscribe();
         };
@@ -103,7 +98,7 @@ export default function Header() {
             <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
                 <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
                     <div className="flex items-center gap-6">
-                        <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />
+                        <Logo image={'logo-light'} />
                         <span className="text-2xl font-bold text-[#1b1b1b]">Đăng nhập</span>
                     </div>
                     <Link to="/">
@@ -120,7 +115,7 @@ export default function Header() {
             <div className="max-w-screen sticky w-full top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
                 <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
                     <div className="flex items-center gap-6">
-                        <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />
+                        <Logo image={'logo-light'} />
                         <span className="text-2xl font-bold text-[#1b1b1b]">Quản trị viên</span>
                     </div>
                     <Link to="/">
@@ -134,12 +129,21 @@ export default function Header() {
     // default header for authenticated users and guests
     return (
         <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
-            <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
+            <div className="relative mx-auto flex w-full lg:max-w-[1440px] md:max-w-[1028px] flex-row items-center justify-between lg:px-12 md:px-4 py-3">
                 <div className="flex items-center gap-6">
-                    <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />
+                    <Logo image={'logo-light'} textColor={'#1b1b1b'} />
                     <div className="flex items-center gap-3">
                         {NAV_ITEMS.map((item, index) => (
-                            <NavItem key={index} title={item.title} icon={item.icon} link={item.link} isActive={item.link === window.location.pathname} />
+                            <NavItem
+                            key={index}
+                            title={item.title}
+                            icon={item.icon}
+                            link={item.link}
+                            isActive={
+                                location.pathname === item.link || 
+                                (location.pathname.startsWith(item.link) && location.pathname !== '/' && item.link !== '/')
+                            }
+                        />                        
                         ))}
                     </div>
                 </div>
@@ -148,7 +152,9 @@ export default function Header() {
                     <div className="flex flex-row items-center gap-6">
                         {session ? (
                             <>
-                                <div className="text-[#1b1b1b]">{session.user.email}</div>
+                                {/* <div className="text-[#1b1b1b]">{session.user.email}</div> */}
+                                <Button title={'Thông tin cá nhân'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={handleNavigate('change-info')} />
+                                <div className="bg-black w-[1px] h-4"></div>
                                 <Button title={'Đăng xuất'} bgColor={'#fafafa'} textColor={'#1b1b1b'} onClick={handleLogout} />
                             </>
                         ) : (

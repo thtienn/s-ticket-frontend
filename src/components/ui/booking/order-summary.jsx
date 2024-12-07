@@ -1,12 +1,22 @@
 import React, { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 
-const OrderSummary = ({ currentStep, selectedTickets, event }) => {
-  const { watch, setValue } = useFormContext()
+const OrderSummary = ({ currentStep, selectedTickets, event, onClick }) => {
+  const { watch, setValue, handleSubmit } = useFormContext()
   const paymentMethod = watch('payment_method')
   const name = watch('name')
   const email = watch('email')
   const phone = watch('phone')
+  const start_time = watch('start_time')
+  const start_date = watch('start_date')
+  const formattedDate = () => {
+    if(start_date) {
+      const options = { day: '2-digit', month: 'long', year: 'numeric' }
+      const formatter = new Intl.DateTimeFormat('vi-VN', options)
+      return formatter.format(new Date(start_date));
+    }
+    return ''
+  }
 
   useEffect(() => {
     setValue(`total_price`, calculateTotal())
@@ -18,7 +28,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
     }, 0)
   }
   return (
-    <div className="w-[25%] min-w-64 p-4 bg-[#FAFAFA] space-y-4 text-sm text-[#1b1b1b]">
+    <div className="w-[25%] min-w-64 p-4 bg-[#FAFAFA] space-y-3 text-sm text-[#1b1b1b]">
       <span className='font-bold text-lg'>Chi tiết đơn hàng</span>
       <div className='flex items-center gap-2 p-2 border border-[#B2BCC2] rounded-lg'>
         <img
@@ -31,7 +41,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
       
       <div className="flex justify-between items-center">
         <span className='text-[#526876] font-normal'>Thời gian</span>
-        <span className='text-[#1B1B1B] font-semibold'>{event?.start_time || ''}</span>
+        <span className='text-[#1B1B1B] font-semibold'>{`${start_time || ''}, ${formattedDate()}`}</span>
       </div>
 
       <hr className="border-t border-[#B2BCC2]" />
@@ -61,8 +71,12 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
           Momo
         </label>
         <label className='block cursor-not-allowed text-[#526876] font-normal'>
-          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="visa" disabled checked={paymentMethod === "visa"}/>
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="zalo" disabled checked={paymentMethod === "zalo"}/>
           ZaloPay
+        </label>
+        <label className='block cursor-not-allowed text-[#526876] font-normal'>
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="paypal" disabled checked={paymentMethod === "paypal"}/>
+          PayPal
         </label>
       </div>
       
@@ -93,7 +107,7 @@ const OrderSummary = ({ currentStep, selectedTickets, event }) => {
             'bg-[#219ce4] text-[#FAFAFA] cursor-pointer hover:bg-sky-400'
             : 'bg-[#F3F3F3] text-[#B2BCC2] cursor-not-allowed'
         }`}
-        onClick={() => {console.log('submit')}}
+        onClick={handleSubmit(onClick)}
         disabled={currentStep !== 2}
       >
         Mua ngay
