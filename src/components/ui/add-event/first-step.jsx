@@ -56,7 +56,7 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
       <div>
         <div className="flex gap-2 mb-2 font-semibold">
           <span className="text-red-500">*</span>
-          <span>Upload hình ảnh</span>
+          <span>Banner sự kiện</span>
         </div>
         <div className="relative flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-56 p-2">
           {bannerPreview?.url ? (

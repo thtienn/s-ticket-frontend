@@ -8,7 +8,7 @@ export default function Logo({image, title, textColor}) {
             onClick={() => navigate('/')}
         >
             <img src={`/assets/icons/${image}.svg`} alt="logo" />
-            <p className={`text-[${textColor}] text-[20px] leading-7 font-bold`}>{title}</p>
+            {/* <p className={`text-[${textColor}] text-[20px] leading-7 font-bold`}>{title}</p> */}
         </div>
     )
 }

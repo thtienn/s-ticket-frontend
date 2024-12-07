@@ -1,3 +1,5 @@
+import Button from '../shared/button'
+
 export default function Banner({ event }) {
     return (
       <div className="bg-[#219CE4] p-12 w-full overflow-hidden">
@@ -24,13 +26,25 @@ export default function Banner({ event }) {
                   
                 </span>
               </div>
-              <button className="bg-[#1B1B1B] text-[#FAFAFA] w-full px-4 py-2 rounded-2xl">
-                Mua vé ngay
-              </button>
             </div>
           </div>
+          <div className="flex flex-row items-end justify-between mb-5">
+            <p className="text-black text-[16px] leading-[12px] font-bold">Giá vé từ</p>
+            <p className="text-[#219ce4] text-[32px] leading-[22px] font-bold">{eventDetails.price} VND</p>
+          </div>
+          <Button
+            title="Mua vé ngay"
+            bgColor="#1b1b1b"
+            textColor="#fff"
+            onClick={() => {
+              const section = document.getElementById('event-list');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+          />
         </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

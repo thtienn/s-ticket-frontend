@@ -77,13 +77,13 @@ export default function Section({ title, categoryItems, maxCards }) {
         }
     }, [categoryItems]);
 
-    const eventsToDisplay = events.slice(0, maxCards); 
-    const chunkedEvents = chunkArray(eventsToDisplay, 3); 
+    const eventsToDisplay = events.slice(0, maxCards);
+    const chunkedEvents = chunkArray(eventsToDisplay, 3);
 
     return (
         <div className='max-w-screen'>
-            <div className="flex flex-col items-start gap-12 px-[120px] py-16 relative mx-auto w-full min-w-[1440px] max-w-[1440px]">
-                <div className="flex flex-col items-start gap-2">
+            <div className="flex flex-col items-center gap-12 px-[120px] py-16 relative mx-auto w-full lg:min-w-[1440px] lg:max-w-[1440px] md:min-w-[1028px] md:max-w-[1028px]">
+                <div className="flex flex-col items-start gap-2 w-full">
                     <p className="text-5xl leading-[64px] text-[#1b1b1b] font-extrabold">{title}</p>
                     <div className="flex flex-row items-center gap-2">
                         {categoryItems.map((category, index) => (
@@ -96,23 +96,23 @@ export default function Section({ title, categoryItems, maxCards }) {
                         ))}
                     </div>
                 </div>
-                <div className="flex flex-col gap-8">
-                    {chunkedEvents.length === 0 && <p className='text-black w-full text-center'>Không có sự kiện nào.</p>}
-                    {chunkedEvents.map((row, rowIndex) => (
-                        <div key={rowIndex} className="flex flex-row items-stretch gap-8">
-                            {row.map((item) => (
-                                <div key={item.id} className="flex-1">
-                                    <EventCard
-                                        event={item}
-                                        onClick={() => {
-                                            window.scrollTo(0, 0);
-                                            navigate(`/ticket-details/${item.id}`)
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    ))}
+                {chunkedEvents.length === 0 && (
+                    <p className="text-black w-full text-left">Không có sự kiện nào.</p>
+                )}
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                    {chunkedEvents.map((row, rowIndex) =>
+                        row.map((item) => (
+                            <div key={item.id} className="w-full">
+                                <EventCard
+                                    event={item}
+                                    onClick={() => {
+                                        window.scrollTo(0, 0);
+                                        navigate(`/ticket-details/${item.id}`);
+                                    }}
+                                />
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ import Button from "../shared/button";
 export default function EventCard({ event, onClick }) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return (
-        <div className="flex relative rounded-3xl min-w-[405px] max-w-[405px] min-h-[480px] border border-black bg-[#fafafa]">
+        <div className="flex relative rounded-3xl min-w-[380px] max-w-[405px] min-h-[480px] border border-black bg-[#fafafa]">
             <div className="absolute top-0 inset-x-0 rounded-t-3xl">
                 <img src={event.image} alt={event.name} className="w-full h-[240px] object-cover rounded-t-3xl" />
             </div>
