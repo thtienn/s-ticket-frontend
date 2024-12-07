@@ -45,6 +45,5 @@ export default function Banner({ event }) {
           />
         </div>
       </div>
-    </div>
   );
 }
