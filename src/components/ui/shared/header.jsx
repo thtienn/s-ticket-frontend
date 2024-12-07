@@ -98,7 +98,7 @@ export default function Header() {
             <div className="max-w-screen sticky top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
                 <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
                     <div className="flex items-center gap-6">
-                        <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />
+                        <Logo image={'logo-light'} />
                         <span className="text-2xl font-bold text-[#1b1b1b]">Đăng nhập</span>
                     </div>
                     <Link to="/">
@@ -115,7 +115,7 @@ export default function Header() {
             <div className="max-w-screen sticky w-full top-0 z-50 bg-[#fafafa] shadow-[0_1px_2px_0px_rgba(0,0,0,0.1)]">
                 <div className="relative mx-auto flex w-full max-w-[1440px] flex-row items-center justify-between px-12 py-3">
                     <div className="flex items-center gap-6">
-                        <Logo title="s-ticket" image={'logo'} textColor={'#1b1b1b'} />
+                        <Logo image={'logo-light'} />
                         <span className="text-2xl font-bold text-[#1b1b1b]">Quản trị viên</span>
                     </div>
                     <Link to="/">
@@ -134,7 +134,16 @@ export default function Header() {
                     <Logo image={'logo-light'} textColor={'#1b1b1b'} />
                     <div className="flex items-center gap-3">
                         {NAV_ITEMS.map((item, index) => (
-                            <NavItem key={index} title={item.title} icon={item.icon} link={item.link} isActive={item.link === window.location.pathname} />
+                            <NavItem
+                            key={index}
+                            title={item.title}
+                            icon={item.icon}
+                            link={item.link}
+                            isActive={
+                                location.pathname === item.link || 
+                                (location.pathname.startsWith(item.link) && location.pathname !== '/' && item.link !== '/')
+                            }
+                        />                        
                         ))}
                     </div>
                 </div>
