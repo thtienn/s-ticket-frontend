@@ -72,14 +72,15 @@ export default function Header() {
                     });
 
                     if (!response.ok) {
-                        console.error("Error fetching user data:", response);
-                        return;
+                        if (response.status === 404) {
+                            navigate('/change-info', { replace: true });    
+                        } else {
+                            console.error("Error fetching user data:", response);
+                            return;
+                        }
                     }
 
                     const userData = await response.json();
-                    if (!userData) {
-                        navigate('/change-info', { replace: true });    
-                    }
 
                     if (userData && userData.role === 'Admin') {
                         if (!location.pathname.startsWith('/admin')) {

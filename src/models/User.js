@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const getAllUsers = async () => {
   const { data, error } = await supabase.from("users").select("*");
@@ -12,26 +13,59 @@ export const getAllUsers = async () => {
 };
 
 export const createUser = async (user) => {
-  const { data, error } = await supabase.from("users").insert([user]);
-  if (error) throw error;
-  return data;
+  const response = await fetch(`${baseUrl}/user`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
+  });
+  if (!response.ok) {
+    console.error("Error creating user:", response);
+    return;
+  }
+  const result = await response.json();
+  return result;
 };
 
 export const getUser = async (email) => {
-  const { data, error } = await supabase.from("users").select().eq("email", email).single()
-  if (error) {
-    console.error("Error fetching user:", error)
-    return null
+  const response = await fetch(`${baseUrl}/user/validate`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        email: email
+    }),
+  });
+  if (!response.ok) {
+    if (response.status === 404) {
+        return null 
+    } else {
+        console.error("Error fetching user data:", response);
+        return;
+    }
   }
-  return data
+  const userData = await response.json();
+  return userData;
 }
 
 export const getSession = () => {
   return supabase.auth.getSession()
 }
 
-export const updateUser = async (user) => {
-  const { data, error } = await supabase.from("users").update(user).eq('id', user.id).single()
-  if (error) throw error
-  return data
+export const updateUser = async (id, user) => {
+  const response = await fetch(`${baseUrl}/user/${id}`, {
+    method: 'PATCH',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
+  });
+  if (!response.ok) {
+    console.error("Error updating user:", response);
+    return;
+  }
+  const result = await response.json();
+  return result;
 }

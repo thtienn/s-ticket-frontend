@@ -16,7 +16,7 @@ const SubmitButton = ({ isFormChanged, initialUser }) => {
             const isConfirmed = window.confirm("Bạn có chắc chắn muốn lưu thay đổi?")
             if(isConfirmed) {
                 if(initialUser) {
-                    await updateUser(dataForm)
+                    await updateUser(initialUser.id, dataForm)
                 }
                 else {
                     await addUser(dataForm)
@@ -64,63 +64,16 @@ const SubmitButton = ({ isFormChanged, initialUser }) => {
 }
 
 export default function ChangeInfo() {
-    const [user, setUser] = useState({
-        province: '',
-        district: '',
-        ward: '',
-    })
+    const [user, setUser] = useState(null)
     const [session, setSession] = useState(false)
     const [initialUser, setInitialUser] = useState(null)
     const [isFormChanged, setIsFormChanged] = useState(false)
     
-    const [locations, setLocations] = useState({
-    provinces: [],
-    districts: [],
-    wards: [],
-    })
+    const [locations, setLocations] = useState(null)
     const methods = useForm({
         defaultValues: user
     })
     const formValues = methods.watch()
-    // Lấy danh sách tỉnh/thành
-    useEffect(() => {
-        const fetchProvincesData = async () => {
-        const provincesData = await fetchProvinces()
-        setLocations((prev) => ({
-            ...prev,
-            provinces: provincesData,
-        }))
-        }
-        fetchProvincesData()
-    }, [])
-
-    // Lấy danh sách quận/huyện khi chọn tỉnh/thành
-    useEffect(() => {
-        if (user.province) {
-        const fetchDistrictsData = async () => {
-            const districtsData = await fetchDistricts(user.province)
-            setLocations((prev) => ({
-            ...prev,
-            districts: districtsData,
-            }))
-        }
-        fetchDistrictsData()
-        }
-    }, [user.province])
-
-    // Lấy danh sách phường/xã khi chọn quận/huyện
-    useEffect(() => {
-        if (user.district) {
-        const fetchWardsData = async () => {
-            const wardsData = await fetchWards(user.district)
-            setLocations((prev) => ({
-            ...prev,
-            wards: wardsData,
-            }))
-        }
-        fetchWardsData()
-        }
-    }, [user.district])
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -130,16 +83,11 @@ export default function ChangeInfo() {
                     Object.keys(userData).forEach((key) => {
                         methods.setValue(key, userData[key]);
                     });
-                    setUser((prevUser) => ({
-                        ...prevUser,
-                        province: userData.province || '',
-                        district: userData.district || '',
-                        ward: userData.ward || '',
-                    }));
+                    setUser(userData);
                     setInitialUser(userData)
                 }
                 else {
-                    methods.setValue('role', 'customer')
+                    methods.setValue('role', 'User')
                     methods.setValue('email', sessionStatus?.user?.email)
                 }
                 setSession(true)
