@@ -1,4 +1,4 @@
-export default function Banner({ event }) {
+export default function Banner({ event, onScrollToDescription }) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   return (
     <div className="bg-[#219CE4] p-12 w-full overflow-hidden">
@@ -21,7 +21,7 @@ export default function Banner({ event }) {
                 {event?.price.toLocaleString()} VND
               </span>
             </div>
-            <button className="bg-[#1B1B1B] text-[#FAFAFA] w-full px-4 py-2 rounded-2xl">
+            <button className="bg-[#1B1B1B] text-[#FAFAFA] w-full px-4 py-2 rounded-2xl" onClick={onScrollToDescription}>
               Mua vé ngay
             </button>
           </div>

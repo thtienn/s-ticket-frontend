@@ -4,12 +4,16 @@ import EventDescription from './ui/event-detail/event-description';
 import EventList from './ui/event-detail/event-list';
 import OrganizerInfo from './ui/event-detail/organizer-info';
 import Footer from './ui/shared/footer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { fetchEventById } from '../controllers/eventController';
 
 export default function EventDetail() {
     const [event, setEvent] = useState(null)
     const { id } = useParams()
+    const descriptionRef = useRef(null);
+    const handleScrollToDescription = () => {
+        descriptionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
     useEffect(() => {
         const fetchEventData = async () => {
             const eventData = await fetchEventById(id)
@@ -22,11 +26,13 @@ export default function EventDetail() {
             <div className='relative z-0'>
                 <div className="h-full w-full">
                     <main className="flex-grow flex flex-col w-full overflow-x-hidden">
-                        <Banner event={event} />
+                        <Banner event={event} onScrollToDescription={handleScrollToDescription} />
                         {/* <div className='max-w-screen'>
                             <div className="flex flex-col items-start gap-7 px-[120px] pt-16 relative mx-auto w-full max-w-[1440px]"> */}
                                 <EventDescription event={event} />
-                                <EventList event={event} />
+                                <div ref={descriptionRef}> {/* Đặt ref tại đây */}
+                                    <EventList event={event} />
+                                </div>
                                 <OrganizerInfo event={event} />
                             {/* </div>
                         </div> */}
