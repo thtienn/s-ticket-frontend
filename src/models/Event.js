@@ -18,7 +18,7 @@ export const getEventById = async (id) => {
 }
 
 export const createEvent = async (event) => {
-    const { data, error } = await supabase.from("events").insert(event);
+    const { data, error } = await supabase.from("event").insert(event);
     if (error) throw error;
     return data;
 }

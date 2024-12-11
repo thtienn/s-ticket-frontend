@@ -31,30 +31,12 @@ export default function AddEvent() {
     const navigate = useNavigate()
     const methods = useForm({
       defaultValues: {
-        approveStatus: 'pending',
+        status: 'PENDING',
         location: {
           province: '',
           district: '',
           ward: ''
         },
-        fixed_questions: [
-          {
-            "optional": "true",
-            "question": "name"
-          },
-          {
-            "optional": "true",
-            "question": "mail"
-          },
-          {
-            "optional": "true",
-            "question": "phone"
-          },
-          {
-            "optional": "true",
-            "question": "address"
-          }
-        ],
       }
     })
 
@@ -151,28 +133,29 @@ export default function AddEvent() {
         const convertedData = {
           ...dataForm,
           image: `${url_storage}${id_folder}/${dataForm.image}`,
-          cancel_request: parseInt(dataForm.cancel_request) || 0,
-          organizer: {
-            ...dataForm.organizer,
-            logo: `${url_storage}${id_folder}/${dataForm.organizer.logo}`,
-          },
-          fixed_questions: dataForm.fixed_questions.map(question => ({
-            ...question,
-            optional: question.optional === "true", // Chuyển thành boolean
-          })),
-          shows: dataForm.shows.map(show => ({
-            ...show,
-            image: `${url_storage}${id_folder}/${show.image}`,
-            ticket_types: show.ticket_types.map(ticket => ({
+          address: `${province} ${district} ${ward} `,
+          organizerImage: dataForm.organizerImage,
+          bankAccountName: dataForm.bankAccountName,
+          bankAccountNumber: dataForm.bankAccountNumber,
+          bankBranch: dataForm.bankBranch,
+          bankName: dataForm.bankName,
+          miniEvents: dataForm.miniEvents.map(event => ({
+            ...event,
+            description: event.description,
+            image: `${url_storage}${id_folder}/${dataForm.image}`,
+            startTime: "",
+            endTime: "",
+            ticketRanks: event.ticketRanks.map(ticket => ({
               ...ticket,
+              rankName: ticket.rankName,
+              description: ticket.ticketDescription,
               price: parseFloat(ticket.price) || 0,
-              quantity: parseInt(ticket.quantity) || 0, // Chuyển đổi tại đây
-              amount: parseInt(ticket.amount) || 0,
+              numberLimit: parseInt(ticket.quantity) || 0,
             })),
           })),
         }
         await addEvent(convertedData)
-        navigate("/")
+        navigate("/event")
         toast.info('Vui lòng chờ quản trị viên duyệt sự kiện!', {
           position: "bottom-right",
           autoClose: 3000,
@@ -258,7 +241,7 @@ export default function AddEvent() {
       return <div className="text-black">User not found</div>
     }
     
-    const steps = ["Thông tin sự kiện", "Thời gian & loại vé", "Thông tin đăng ký", "Thông tin thanh toán"]
+    const steps = ["Thông tin sự kiện", "Thời gian & loại vé", "Thông tin thanh toán"]
     return (
         <div className='flex flex-col w-full font-sans text-start'>
             <div className='flex flex-col h-full'>
@@ -285,10 +268,10 @@ export default function AddEvent() {
                         handleShowsPreviewChange={handleShowsPreviewChange}
                       />
                     }
-                    {currentStep == 2 &&
+                    {/* {currentStep == 2 &&
                       <ThirdStep />
-                    }
-                    {currentStep == 3 &&
+                    } */}
+                    {currentStep == 2 &&
                       <FourthStep />
                     }
                     <Button/>

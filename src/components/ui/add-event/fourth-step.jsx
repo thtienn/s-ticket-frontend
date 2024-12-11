@@ -13,7 +13,7 @@ const FourthStep = () => {
         </div>
         <input
           className='w-full p-2 border border-[#219ce4] rounded-lg'
-          {...register("account.account_name", {required: 'Chủ tài khoản là bắt buộc'})}
+          {...register("bankAccountName", {required: 'Chủ tài khoản là bắt buộc'})}
           type="text"
         />
         <p className="text-red-500 text-sm">{errors?.account?.account_name?.message}</p>
@@ -26,7 +26,7 @@ const FourthStep = () => {
         </div>
         <input
           className='w-full p-2 border border-[#219ce4] rounded-lg'
-          {...register("account.account_number", {required: 'Số tài khoản là bắt buộc'})}
+          {...register("bankAccountNumber", {required: 'Số tài khoản là bắt buộc'})}
           type="number"
         />
         <p className="text-red-500 text-sm">{errors?.account?.account_number?.message}</p>
@@ -39,7 +39,7 @@ const FourthStep = () => {
         </div>
         <input
           className='w-full p-2 border border-[#219ce4] rounded-lg'
-          {...register("account.bank_name", {required: 'Tên ngân hàng là bắt buộc'})}
+          {...register("bankName", {required: 'Tên ngân hàng là bắt buộc'})}
           type="text"
         />
         <p className="text-red-500 text-sm">{errors?.account?.bank_name?.message}</p>
@@ -52,7 +52,7 @@ const FourthStep = () => {
         </div>
         <input
           className='w-full p-2 border border-[#219ce4] rounded-lg'
-          {...register("account.branch_name", {required: 'Chi nhánh là bắt buộc'})}
+          {...register("bankBranch", {required: 'Chi nhánh là bắt buộc'})}
           type="text"
         />
         <p className="text-red-500 text-sm">{errors?.account?.branch_name?.message}</p>

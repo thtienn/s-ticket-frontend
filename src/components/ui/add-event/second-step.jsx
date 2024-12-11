@@ -40,7 +40,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
   }
   return (
     <div className='flex flex-col gap-4'>
-      <div>
+      {/* <div>
         <div className="flex gap-2 mb-2 font-semibold">
           <span className="text-red-500">*</span>
           <span>Yêu cầu hủy vé</span>
@@ -54,7 +54,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
           <option value="0">Không cho phép hủy vé</option>
           <option value="2">Cho phép hủy trong vòng 2 giờ sau khi mua</option>
         </select>
-      </div>
+      </div> */}
       <div className='flex items-center justify-between'>
           <div className='text-base font-bold'>Tổng buổi diễn: {shows.show_counter}</div>
           <div className='flex gap-6 items-center'>
@@ -111,9 +111,9 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                         <input
                             type='time'
                             className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.start_time`, {required: 'Thời gian bắt đầu là bắt buộc'})}
+                            {...register(`shows.${showIndex}.startTime`, {required: 'Thời gian bắt đầu là bắt buộc'})}
                         />
-                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.start_time?.message}</p>
+                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.startTime?.message}</p>
                     </div>
                     <div className='flex-1'>
                         <div className="flex gap-2 mb-2 font-semibold">
@@ -123,7 +123,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                         <input
                             type='date'
                             className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.start_date`, {required: 'Ngày bắt đầu là bắt buộc'})}
+                            {...register(`shows.${showIndex}.startTime`, {required: 'Ngày bắt đầu là bắt buộc'})}
                         />
                         <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.start_date?.message}</p>
                     </div>
@@ -137,7 +137,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                     <input
                         type='time'
                         className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                        {...register(`shows.${showIndex}.end_time`, {required: 'Thời gian kết thúc là bắt buộc'})}
+                        {...register(`shows.${showIndex}.endTime`, {required: 'Thời gian kết thúc là bắt buộc'})}
                     />
                     <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.end_time?.message}</p>
                   </div>
@@ -149,7 +149,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                     <input
                         type='date'
                         className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                        {...register(`shows.${showIndex}.end_date`, {required: 'Ngày kết thúc là bắt buộc'})}
+                        {...register(`shows.${showIndex}.endTime`, {required: 'Ngày kết thúc là bắt buộc'})}
                     />
                     <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.end_date?.message}</p>
                   </div>
@@ -243,7 +243,7 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                         <input
                             type='text'
                             className='w-full p-2 rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.ticket_types.${ticketIndex}.name`, {
+                            {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.name`, {
                                 required: 'Tên vé là bắt buộc'
                             })}
                         />
@@ -257,7 +257,7 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                         <input
                             type='number'
                             className='w-full p-2 rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.ticket_types.${ticketIndex}.price`, {
+                            {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.price`, {
                                 required: 'Giá vé là bắt buộc'
                             })}
                         />
@@ -271,10 +271,10 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                         <input
                             type='number'
                             className='w-full p-2 rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.ticket_types.${ticketIndex}.quantity`, {
+                            {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.numberLimit`, {
                                 required: 'Số lượng vé là bắt buộc',
                                 onChange: (e) => {
-                                  setValue(`shows.${showIndex}.ticket_types.${ticketIndex}.amount`, e.target.value)
+                                  setValue(`shows.${showIndex}.tickettRanks.${ticketIndex}.numberLimit`, e.target.value)
                                 }
                             })}
                         />
@@ -288,7 +288,7 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                     </div>
                     <textarea
                         className='w-full p-2 rounded-lg min-h-20 text-[#1b1b1b]'
-                        {...register(`shows.${showIndex}.ticket_types.${ticketIndex}.description`, {
+                        {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.description`, {
                             required: 'Mô tả vé là bắt buộc'
                         })}
                     />

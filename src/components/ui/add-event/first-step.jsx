@@ -89,7 +89,7 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
         <input
           type='text'
           className='w-full p-2 border border-[#219ce4] rounded-lg'
-          {...register("title", {required: 'Tên sự kiện là bắt buộc'})}
+          {...register("name", {required: 'Tên sự kiện là bắt buộc'})}
         />
         <p className="text-red-500 text-sm">{errors?.title?.message}</p>
       </div>
@@ -218,8 +218,8 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
             required: 'Thể loại là bắt buộc',
           })}
         >
-          <option value="Âm nhạc">Âm nhạc</option>
-          <option value="Thể thao">Thể thao</option>
+          <option value="Music">Âm nhạc</option>
+          <option value="Sport">Thể thao</option>
           <option value="Seminar">Seminar</option>
           <option value="Khác">Khác</option>
         </select>
@@ -277,7 +277,7 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
             <input
               type="text"
               className='w-full p-2 border border-[#219ce4] rounded-lg'
-              {...register("organizer.name", {required: 'Tên ban tổ chức là bắt buộc'})}
+              {...register("organizerName", {required: 'Tên ban tổ chức là bắt buộc'})}
             />
             <p className="text-red-500 text-sm">{errors?.organizer?.name?.message}</p>
           </div>
@@ -288,7 +288,7 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
             </div>
             <textarea
               className='w-full p-2 border border-[#219ce4] rounded-lg flex-grow'
-              {...register("organizer.info", {required: 'Thông tin ban tổ chức là bắt buộc'})}
+              {...register("organizerDescription", {required: 'Thông tin ban tổ chức là bắt buộc'})}
             />
             <p className="text-red-500 text-sm">{errors?.organizer?.info?.message}</p>
           </div>
