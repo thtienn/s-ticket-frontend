@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
-
+import { createClient } from '@supabase/supabase-js';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 export default function EventList({ event }) {
     const dateOptions = { 
         year: 'numeric', 
@@ -14,8 +17,13 @@ export default function EventList({ event }) {
     };
     const navigate = useNavigate()
 
-    const handleBooking = (show_id) => {
+    const handleBooking = async (show_id) => {
         window.scrollTo(0, 0);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            navigate('/login', { replace: true });
+            return;
+        }
         navigate(`/booking/${event.id}/${show_id}`)
     }
 
