@@ -1,7 +1,17 @@
 import { useNavigate } from "react-router-dom";
 
 export default function EventList({ event }) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const dateOptions = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric'
+    };
+      
+    const timeOptions = { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: false // Hiển thị định dạng 24 giờ
+    };
     const navigate = useNavigate()
 
     const handleBooking = (show_id) => {
@@ -27,7 +37,7 @@ export default function EventList({ event }) {
                             }`}
                         >
                             <span>
-                            {new Date(show.startTime).toLocaleDateString(undefined, options)} - {new Date(show.endTime).toLocaleDateString(undefined, options)}
+                            {new Date(show.startTime).toLocaleTimeString('vi-VN', timeOptions)}, {new Date(show.startTime).toLocaleDateString('vi-VN', dateOptions)} - {new Date(show.endTime).toLocaleTimeString('vi-VN', timeOptions)}, {new Date(show.endTime).toLocaleDateString('vi-VN', dateOptions)}
                             </span>
                             {totalTicketsLeft > 0 ? (
                                 <button

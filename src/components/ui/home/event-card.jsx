@@ -17,7 +17,7 @@ export default function EventCard({ event, onClick }) {
                         </div>
                         <div className="flex flex-row items-center gap-3">
                             <img src="/assets/icons/calendar.svg" alt="calendar" />
-                            <p>{new Date(event.date).toLocaleDateString(undefined, options)}</p>
+                            <p>{new Date(event.date).toLocaleDateString('vi-VN', options)}</p>
                         </div>
                     </div>
                 </div>
