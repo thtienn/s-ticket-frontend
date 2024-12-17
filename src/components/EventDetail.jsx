@@ -27,15 +27,11 @@ export default function EventDetail() {
                 <div className="h-full w-full">
                     <main className="flex-grow flex flex-col w-full overflow-x-hidden">
                         <Banner event={event} onScrollToDescription={handleScrollToDescription} />
-                        {/* <div className='max-w-screen'>
-                            <div className="flex flex-col items-start gap-7 px-[120px] pt-16 relative mx-auto w-full max-w-[1440px]"> */}
-                                <EventDescription event={event} />
-                                <div ref={descriptionRef}> {/* Đặt ref tại đây */}
-                                    <EventList event={event} />
-                                </div>
-                                <OrganizerInfo event={event} />
-                            {/* </div>
-                        </div> */}
+                        <EventDescription event={event} />
+                        <div ref={descriptionRef}> {/* Đặt ref tại đây */}
+                            <EventList event={event} />
+                        </div>
+                        <OrganizerInfo event={event} />
                     </main>
                     <Footer />
                 </div>
