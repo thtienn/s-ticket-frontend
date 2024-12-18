@@ -1,10 +1,5 @@
 import AdminSidebar from "../ui/admin/sidebar"
 import { useEffect, useState } from "react"
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 function CategoryButton({ category, onClick, isActive }) {
     return (
@@ -24,17 +19,20 @@ export default function ManageEvents() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const { data, error } = await supabase.from('events').select('*');
-            if (error) {
-                console.log('error', error);
-                return;
+            try {
+                const response = await fetch('http://localhost:3000/event/all');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                const data = await response.json();
+                setEvents(data);
+                setFilteredEvents(data);
+            } catch (error) {
+                console.error('Error fetching events:', error);
             }
-            console.log(data);
-            setEvents(data);
-            setFilteredEvents(data);
         };
         fetchEvents();
-    }, [events.map(event => event.approveStatus).join(',')]);
+    }, []);
 
     const handleEventStatus = (status) => {
         setActiveStatus(status);
@@ -44,13 +42,13 @@ export default function ManageEvents() {
                 filtered = events;
                 break;
             case 'Đang chờ':
-                filtered = events.filter(event => event.approveStatus === 'pending');
+                filtered = events.filter(event => event.status === 'PENDING');
                 break;
             case 'Đã duyệt':
-                filtered = events.filter(event => event.approveStatus === 'approved');
+                filtered = events.filter(event => event.status === 'APPROVED');
                 break;
             case 'Đã từ chối':
-                filtered = events.filter(event => event.approveStatus === 'declined');
+                filtered = events.filter(event => event.status === 'REJECTED');
                 break;
             default:
                 filtered = events;
@@ -63,16 +61,16 @@ export default function ManageEvents() {
         const StatusBadge = ({ status }) => {
             return (
                 <div
-                    className={`px-4 py-1 rounded-2xl text-xs font-semibold ${status === 'pending'
+                    className={`px-4 py-1 rounded-2xl text-xs font-semibold ${status === 'PENDING'
                         ? 'bg-[#f2e5cf] border-2 border-[#f2ae39] text-[#f2ae39]'
-                        : status === 'approved'
+                        : status === 'APPROVED'
                             ? 'bg-[#cef6d0] border-2 border-[#56d45c] text-[#56d45c]'
                             : 'bg-[#fbcccc] border-2 border-[#f87474] text-[#f87474]'
                         }`}
                 >
-                    {status === 'pending'
+                    {status === 'PENDING'
                         ? 'Đang chờ'
-                        : status === 'approved'
+                        : status === 'APPROVED'
                             ? 'Đã duyệt'
                             : 'Đã từ chối'}
                 </div>
@@ -80,47 +78,57 @@ export default function ManageEvents() {
         }
 
         const handleEventApproval = async (event_id, status) => {
-            const { data, error } = await supabase.from('events').update({ approveStatus: status }).eq('id', event_id);
-            if (error) {
-                console.log('error', error);
-                return;
-            }
-            console.log(data);
-            const updatedEvents = events.map(event => {
-                if (event.id === event_id) {
-                    return { ...event, approveStatus: status };
+            try {
+                const response = await fetch(`http://localhost:3000/event/${event_id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update event status');
                 }
-                return event;
-            });
-            setEvents(updatedEvents);
-            handleEventStatus("Tất cả");
+                
+                const updatedEvents = events.map(event => {
+                    if (event.id === event_id) {
+                        return { ...event, status };
+                    }
+                    return event;
+                });
+                setEvents(updatedEvents);
+                handleEventStatus(activeStatus);
+            } catch (error) {
+                console.error('Error updating event status:', error);
+            }
         };
 
         return (
             <div className={`w-full flex flex-row items-start justify-between py-5 px-6 rounded-xl border border-black hover:cursor-pointer hover:bg-[#d9d9d9]`}>
                 <div className="flex flex-col items-start gap-1">
-                    <p className="font-bold text-lg">{event.title}</p>
-                    <p className="font-normal text-base">{event.organizer.name}</p>
+                    <p className="font-bold text-lg">{event.name}</p>
+                    <p className="font-normal text-base">{event.organizerName || 'Unknown Organizer'}</p>
                 </div>
-                {event.approveStatus === 'pending' && (
+                {event.status === 'PENDING' && (
                     <div className="flex flex-col items-end gap-4">
-                        <StatusBadge status={event.approveStatus} />
+                        <StatusBadge status={event.status} />
                         <div className="flex flex-row items-center gap-2">
-                            <button className="text-white bg-[#219ce4] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "approved")}>Duyệt</button>
-                            <button className="text-white bg-[#1b1b1b] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "declined")}>Từ chối</button>
+                            <button className="text-white bg-[#219ce4] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "APPROVED")}>Duyệt</button>
+                            <button className="text-white bg-[#1b1b1b] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "REJECTED")}>Từ chối</button>
                         </div>
                     </div>
                 )}
-                {event.approveStatus === 'approved' && (
+                {event.status === 'APPROVED' && (
                     <div className="flex flex-col items-end gap-4">
-                        <StatusBadge status={event.approveStatus} />
-                        <button className="text-white bg-[#1b1b1b] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "pending")}>Hủy</button>
+                        <StatusBadge status={event.status} />
+                        <button className="text-white bg-[#1b1b1b] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "PENDING")}>Hủy</button>
                     </div>
                 )}
-                {event.approveStatus === 'declined' && (
+                {event.status === 'REJECTED' && (
                     <div className="flex flex-col items-end gap-4">
-                        <StatusBadge status={event.approveStatus} />
-                        <button className="text-white bg-[#219ce4] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "approved")}>Duyệt</button>
+                        <StatusBadge status={event.status} />
+                        <button className="text-white bg-[#219ce4] px-4 py-2 rounded-lg" onClick={() => handleEventApproval(event.id, "APPROVED")}>Duyệt</button>
                     </div>
                 )}
             </div>

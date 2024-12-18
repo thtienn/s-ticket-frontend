@@ -1,10 +1,5 @@
 import AdminSidebar from "../ui/admin/sidebar"
 import { useEffect, useState } from "react"
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 function RoleButton({ role, onClick, isActive }) {
     return (
@@ -24,17 +19,20 @@ export default function ManageUsers() {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const { data, error } = await supabase.from('users').select('*');
-            if (error) {
-                console.log('error', error);
-                return;
+            try {
+                const response = await fetch('http://localhost:3000/user');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+                const data = await response.json();
+                setUsers(data);
+                setFilteredUsers(data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
             }
-            console.log(data);
-            setUsers(data);
-            setFilteredUsers(data);
         };
         fetchUsers();
-    }, [users.map(user => user.role).join(',')])
+    }, [])
 
     const handleUserStatus = (role) => {
         setActiveRole(role)
@@ -44,10 +42,10 @@ export default function ManageUsers() {
                 filtered = users;
                 break;
             case 'Quản trị viên':
-                filtered = users.filter(user => user.role === 'admin');
+                filtered = users.filter(user => user.role === 'Admin');
                 break;
             case 'Khách hàng':
-                filtered = users.filter(user => user.role === 'customer');
+                filtered = users.filter(user => user.role === 'User');
                 break;
             default:
                 filtered = users;
@@ -61,12 +59,12 @@ export default function ManageUsers() {
             return (
                 <div
                     className={`px-4 py-1 rounded-2xl text-xs font-semibold ${
-                        role === 'customer'
+                        role === 'User'
                             ? 'bg-[#f2e5cf] border-2 border-[#f2ae39] text-[#f2ae39]'
                             : 'bg-[#fbcccc] border-2 border-[#f87474] text-[#f87474]'
                     }`}
                 >
-                    {role === 'customer'
+                    {role === 'User'
                         ? 'Khách hàng'
                         : 'Quản trị viên'}
                 </div>
@@ -74,27 +72,43 @@ export default function ManageUsers() {
         }
 
         const handleRoleChange = async (user_id, role) => {
-            const { data, error } = await supabase.from('users').update({ role: role }).eq('id', user_id);
-            if (error) {
-                console.log('error', error);
-                return;
+            try {
+                const response = await fetch(`http://localhost:3000/user/${user_id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ role })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update user role');
+                }
+                
+                const updatedUsers = users.map(user => user.id === user_id ? { ...user, role: role } : user);
+                setUsers(updatedUsers);
+                handleUserStatus(activeRole);
+            } catch (error) {
+                console.error('Error updating user role:', error);
             }
-            console.log(data);
-            const updatedUsers = users.map(user => user.id === user_id ? { ...user, role: role } : user);
-            setUsers(updatedUsers);
-            handleUserStatus(activeRole);
         }
 
         const handleRemoveUser = async (user_id) => {
-            const { data, error } = await supabase.from('users').delete().eq('id', user_id);
-            if (error) {
-                console.log('error', error);
-                return;
+            try {
+                const response = await fetch(`http://localhost:3000/user/${user_id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete user');
+                }
+                
+                const updatedUsers = users.filter(user => user.id !== user_id);
+                setUsers(updatedUsers);
+                handleUserStatus(activeRole);
+            } catch (error) {
+                console.error('Error deleting user:', error);
             }
-            console.log(data);
-            const updatedUsers = users.filter(user => user.id !== user_id);
-            setUsers(updatedUsers);
-            handleUserStatus(activeRole);
         }
     
         return (
@@ -107,11 +121,11 @@ export default function ManageUsers() {
             <div className="flex flex-col items-end gap-4">
                 <UserBadge role={user.role} />
                 <div className="flex flex-row items-center gap-2">
-                {user.role !== 'admin' && (
-                    <button className="text-white bg-[#219ce4] px-4 py-2 rounded-lg" onClick={() => handleRoleChange(user.id, "admin")}>Cấp quyền</button>
+                {user.role !== 'Admin' && (
+                    <button className="text-white bg-[#219ce4] px-4 py-2 rounded-lg" onClick={() => handleRoleChange(user.id, "Admin")}>Cấp quyền</button>
                 )}
-                {user.role === 'admin' && (
-                    <button className="text-white bg-[#f24b4b] px-4 py-2 rounded-lg" onClick={() => handleRoleChange(user.id, "customer")}>Hủy quyền</button>
+                {user.role === 'Admin' && (
+                    <button className="text-white bg-[#f24b4b] px-4 py-2 rounded-lg" onClick={() => handleRoleChange(user.id, "User")}>Hủy quyền</button>
                 )}
                 <button className="text-white bg-[#1b1b1b] px-4 py-2 rounded-lg" onClick={() => handleRemoveUser(user.id)}>Xóa</button>
                 </div>
