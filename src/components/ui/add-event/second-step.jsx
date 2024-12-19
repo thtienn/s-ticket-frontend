@@ -3,60 +3,45 @@
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import Button from '../shared/button'
 
-const SecondStep = ({ shows, setShows, showsPreview, setShowsPreview, handleShowsPreviewChange }) => {
+const SecondStep = ({ miniEvents, setMiniEvents, miniEventsPreview, setMiniEventsPreview, handleMiniEventsPreviewChange }) => {
   return (
     <div className='flex flex-col gap-4 text-sm font-normal text-[#1b1b1b]'>
         <div className='text-[#1B1B1B] text-xl font-extrabold'>Thời gian & loại vé</div>
         <ManageShows
-          shows={shows}
-          setShows={setShows}
-          showsPreview={showsPreview}
-          setShowsPreview={setShowsPreview}
-          handleShowsPreviewChange={handleShowsPreviewChange}
+          miniEvents={miniEvents}
+          setMiniEvents={setMiniEvents}
+          miniEventsPreview={miniEventsPreview}
+          setMiniEventsPreview={setMiniEventsPreview}
+          handleMiniEventsPreviewChange={handleMiniEventsPreviewChange}
         />
     </div>
   )
 }
 
-const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleShowsPreviewChange }) => {
+const ManageShows = ({ miniEvents, setMiniEvents, miniEventsPreview, setMiniEventsPreview, handleMiniEventsPreviewChange }) => {
   const { register, control, formState: { errors } } = useFormContext()
   const { append, remove, fields } = useFieldArray({
-    name: 'shows',
+    name: 'miniEvents',
     control,
   })
   const handleRemoveAllShow = () => {
-    setShows((prev) => ({ ...prev, show_counter: 0 }))
+    setMiniEvents((prev) => ({ ...prev, show_counter: 0 }))
     remove()
-    setShowsPreview([])
+    setMiniEventsPreview([])
   }
   const handleAddShow = () => {
-    append({ show_id: shows.show_current_id, ticket_types: [] })
-    setShows((prev) => ({
+    append({ ticketRanks: [] })
+    setMiniEvents((prev) => ({
       ...prev,
       show_counter: prev.show_counter + 1,
       show_current_id: prev.show_current_id + 1
     }))
-    setShowsPreview((prev) => [...prev, null])
+    setMiniEventsPreview((prev) => [...prev, null])
   }
   return (
     <div className='flex flex-col gap-4'>
-      {/* <div>
-        <div className="flex gap-2 mb-2 font-semibold">
-          <span className="text-red-500">*</span>
-          <span>Yêu cầu hủy vé</span>
-        </div>
-        <select
-          className='w-full p-2 border border-[#219ce4] rounded-lg'
-          {...register('cancel_request', {
-            required: 'Chọn 1 hình thức',
-          })}
-        >
-          <option value="0">Không cho phép hủy vé</option>
-          <option value="2">Cho phép hủy trong vòng 2 giờ sau khi mua</option>
-        </select>
-      </div> */}
       <div className='flex items-center justify-between'>
-          <div className='text-base font-bold'>Tổng buổi diễn: {shows.show_counter}</div>
+          <div className='text-base font-bold'>Tổng buổi diễn: {miniEvents.show_counter}</div>
           <div className='flex gap-6 items-center'>
               {fields.length > 0 && (
               <div className='flex gap-6 items-center'>
@@ -89,11 +74,11 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                 onClick={() => {
                     // Remove: show index
                     remove(showIndex)
-                    setShows((prev) => ({
+                    setMiniEvents((prev) => ({
                       ...prev,
                       show_counter: prev.show_counter - 1,
                     }))
-                    setShowsPreview((prev) => prev.filter((_, i) => i !== showIndex))
+                    setMiniEventsPreview((prev) => prev.filter((_, i) => i !== showIndex))
                 }}
                 className='text-center rounded-lg font-bold text-[#FAFAFA] bg-[#ff4d4f] py-1 px-3 cursor-pointer hover:bg-red-600'
               >
@@ -111,7 +96,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                         <input
                             type='time'
                             className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.startTime`, {required: 'Thời gian bắt đầu là bắt buộc'})}
+                            {...register(`miniEvents.${showIndex}.startTime`, {required: 'Thời gian bắt đầu là bắt buộc'})}
                         />
                         <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.startTime?.message}</p>
                     </div>
@@ -123,9 +108,9 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                         <input
                             type='date'
                             className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.startTime`, {required: 'Ngày bắt đầu là bắt buộc'})}
+                            {...register(`miniEvents.${showIndex}.startTime`, {required: 'Ngày bắt đầu là bắt buộc'})}
                         />
-                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.start_date?.message}</p>
+                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.startTime?.message}</p>
                     </div>
                 </div>
                 <div className='flex gap-4'>
@@ -137,7 +122,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                     <input
                         type='time'
                         className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                        {...register(`shows.${showIndex}.endTime`, {required: 'Thời gian kết thúc là bắt buộc'})}
+                        {...register(`miniEvents.${showIndex}.endTime`, {required: 'Thời gian kết thúc là bắt buộc'})}
                     />
                     <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.end_time?.message}</p>
                   </div>
@@ -149,7 +134,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                     <input
                         type='date'
                         className='w-full p-2 border border-[#219ce4] rounded-lg text-[#1b1b1b]'
-                        {...register(`shows.${showIndex}.endTime`, {required: 'Ngày kết thúc là bắt buộc'})}
+                        {...register(`miniEvents.${showIndex}.endTime`, {required: 'Ngày kết thúc là bắt buộc'})}
                     />
                     <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.end_date?.message}</p>
                   </div>
@@ -162,7 +147,7 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                   </div>
                   <textarea
                       className='w-full p-2 border border-[#219ce4] rounded-lg flex-grow'
-                      {...register(`shows.${showIndex}.description`, {required: 'Thông tin thêm là bắt buộc'})}
+                      {...register(`miniEvents.${showIndex}.description`, {required: 'Thông tin thêm là bắt buộc'})}
                   />
                   <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.description?.message}</p>
               </div>
@@ -173,9 +158,9 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                 <span>Sơ đồ chỗ ngồi</span>
               </div>
               <div className="relative flex flex-col items-center justify-center border border-[#219ce4] rounded-lg w-full h-56 p-2">
-                {showsPreview[showIndex]?.url ? (
+                {miniEventsPreview[showIndex]?.url ? (
                   <img
-                    src={showsPreview[showIndex].url}
+                    src={miniEventsPreview[showIndex].url}
                     alt="Show Preview"
                     className="object-contain w-full h-full"
                   />
@@ -188,12 +173,12 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleShowsPreviewChange(e, showIndex)}
+                  onChange={(e) => handleMiniEventsPreviewChange(e, showIndex)}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
               </div>
             </div>
-            <ManageTickets showIndex={showIndex} shows={shows} setShows={setShows} />
+            <ManageTickets showIndex={showIndex} miniEvents={miniEvents} setMiniEvents={setMiniEvents} />
           </div>
         )
       })}
@@ -201,18 +186,18 @@ const ManageShows = ({ shows, setShows, showsPreview, setShowsPreview, handleSho
   )
 }
 
-const ManageTickets = ({ showIndex, shows, setShows }) => {
+const ManageTickets = ({ showIndex, miniEvents, setMiniEvents }) => {
   const { register, control, setValue, formState: { errors } } = useFormContext()
   const { append, remove, fields } = useFieldArray({
-    name: `shows.${showIndex}.ticket_types`,
+    name: `miniEvents.${showIndex}.ticketRanks`,
     control,
   })
   const handleRemoveAllTicket = () => {
     remove()
   }
   const handleAddTicket = () => {
-    append({ticket_id: shows.ticket_current_id})
-    setShows((prev) => ({
+    append({soldNumber: 0})
+    setMiniEvents((prev) => ({
       ...prev,
       ticket_current_id: prev.ticket_current_id + 1
     }))
@@ -243,11 +228,11 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                         <input
                             type='text'
                             className='w-full p-2 rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.name`, {
+                            {...register(`miniEvents.${showIndex}.ticketRanks.${ticketIndex}.rankName`, {
                                 required: 'Tên vé là bắt buộc'
                             })}
                         />
-                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.ticket_types?.[ticketIndex]?.name?.message}</p>
+                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.[ticketIndex]?.name?.message}</p>
                     </div>
                     <div className='flex-1'>
                         <div className="flex gap-2 mb-2 font-semibold">
@@ -257,11 +242,11 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                         <input
                             type='number'
                             className='w-full p-2 rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.price`, {
+                            {...register(`miniEvents.${showIndex}.ticketRanks.${ticketIndex}.price`, {
                                 required: 'Giá vé là bắt buộc'
                             })}
                         />
-                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.ticket_types?.[ticketIndex]?.price?.message}</p>
+                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.[ticketIndex]?.price?.message}</p>
                     </div>
                     <div className='flex-1'>
                         <div className="flex gap-2 mb-2 font-semibold">
@@ -271,14 +256,14 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                         <input
                             type='number'
                             className='w-full p-2 rounded-lg text-[#1b1b1b]'
-                            {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.numberLimit`, {
+                            {...register(`miniEvents.${showIndex}.ticketRanks.${ticketIndex}.numberLimit`, {
                                 required: 'Số lượng vé là bắt buộc',
                                 onChange: (e) => {
-                                  setValue(`shows.${showIndex}.tickettRanks.${ticketIndex}.numberLimit`, e.target.value)
+                                  setValue(`miniEvents.${showIndex}.ticketRanks.${ticketIndex}.numberLimit`, e.target.value)
                                 }
                             })}
                         />
-                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.ticket_types?.[ticketIndex]?.quantity?.message}</p>
+                        <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.[ticketIndex]?.numberLimit?.message}</p>
                     </div>
                 </div>
                 <div>
@@ -288,11 +273,11 @@ const ManageTickets = ({ showIndex, shows, setShows }) => {
                     </div>
                     <textarea
                         className='w-full p-2 rounded-lg min-h-20 text-[#1b1b1b]'
-                        {...register(`shows.${showIndex}.ticketRanks.${ticketIndex}.description`, {
+                        {...register(`miniEvents.${showIndex}.ticketRanks.${ticketIndex}.description`, {
                             required: 'Mô tả vé là bắt buộc'
                         })}
                     />
-                    <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.ticket_types?.[ticketIndex]?.description?.message}</p>
+                    <p className="text-red-500 text-sm">{errors?.shows?.[showIndex]?.[ticketIndex]?.description?.message}</p>
                 </div>
                 <div className='text-red-600'>
                 </div>

@@ -12,7 +12,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { fetchUser } from "../controllers/userController"
 import { toast } from "react-toastify"
 
-const url_storage = "https://hjuljskjtwahvjvbtllb.supabase.co/storage/v1/object/public/test/"
+// const url_storage = "https://vepooluprzkesyzrzzjx.supabase.co/storage/v1/object/public/test/"
+const url_storage = "https://vepooluprzkesyzrzzjx.supabase.co/storage/v1/object/public/test/"
 
 export default function AddEvent() {
     const [currentStep, setCurrentStep] = useState(0)
@@ -23,7 +24,7 @@ export default function AddEvent() {
       district: '',
       ward: '',
     })
-    const [shows, setShows] = useState({
+    const [miniEvents, setMiniEvents] = useState({
       show_counter: 0,
       show_current_id: 0,
       ticket_current_id: 0,
@@ -32,23 +33,21 @@ export default function AddEvent() {
     const methods = useForm({
       defaultValues: {
         status: 'PENDING',
-        location: {
-          province: '',
-          district: '',
-          ward: ''
-        },
+        isOnAd: "False",
+        startTime: "2024-12-20T11:30:00Z",
+        endTime: "2024-12-20T12:30:00Z",
       }
     })
 
   const [bannerPreview, setBannerPreview] = useState(null);
   const [logoPreview, setlogoPreview] = useState(null);
-  const [showsPreview, setShowsPreview] = useState([])
+  const [miniEventsPreview, setMiniEventsPreview] = useState([])
 
   useEffect(() => {
     const fetchUserData = async () => {
         const { sessionStatus } = await fetchUser()
         if(sessionStatus) {
-            methods.setValue('email', sessionStatus?.user?.email)
+            // methods.setValue('email', sessionStatus?.user?.email)
             setSession(true)
         }
     }
@@ -68,26 +67,26 @@ export default function AddEvent() {
         }
         if (type === "logo") {
           setlogoPreview(fileData)
-          methods.setValue('organizer.logo', id)
+          methods.setValue('organizerImage', id)
         }
       };
       reader.readAsDataURL(file);
     }
   }
 
-  const handleShowsPreviewChange = (event, index) => {
+  const handleMiniEventsPreviewChange = (event, index) => {
     const file = event.target.files?.[0]
     if (file) {
       const id = uuidv4()
       const reader = new FileReader()
       reader.onload = () => {
         const fileData = { file, id, url: reader.result }
-        setShowsPreview((prev) => {
+        setMiniEventsPreview((prev) => {
           const updated = [...prev]
           updated[index] = fileData
           return updated
         })
-        methods.setValue(`shows.${index}.image`, id)
+        methods.setValue(`miniEvents.${index}.image`, id)
       }
       reader.readAsDataURL(file)
     }
@@ -95,14 +94,15 @@ export default function AddEvent() {
 
   const uploadAllImages = async (id_folder) => {
     try {
+      console.log("bannerPreview?.file")
       if (bannerPreview?.file) {
         await addImage(bannerPreview.file, id_folder, bannerPreview.id);
       }
       if (logoPreview?.file) {
         await addImage(logoPreview.file, id_folder, logoPreview.id);
       }
-      for (let i = 0; i < showsPreview.length; i++) {
-        const preview = showsPreview[i];
+      for (let i = 0; i < miniEventsPreview.length; i++) {
+        const preview = miniEventsPreview[i];
         if (preview?.file) {
           await addImage(preview.file, id_folder, preview.id);
         }
@@ -127,14 +127,16 @@ export default function AddEvent() {
     
     const handleAddEvent = async (dataForm) => {
       setIsLoading(true);
+      let convertedData = null; // Define convertedData in the outer scope
+    
       try {
-        const id_folder = uuidv4()
-        await uploadAllImages(id_folder)
-        const convertedData = {
+        const id_folder = uuidv4();
+        await uploadAllImages(id_folder);
+        // Assign the converted data here
+        convertedData = {
           ...dataForm,
           image: `${url_storage}${id_folder}/${dataForm.image}`,
-          address: `${province} ${district} ${ward} `,
-          organizerImage: dataForm.organizerImage,
+          organizerImage: `${url_storage}${id_folder}/${dataForm.organizerImage}`,
           bankAccountName: dataForm.bankAccountName,
           bankAccountNumber: dataForm.bankAccountNumber,
           bankBranch: dataForm.bankBranch,
@@ -142,20 +144,25 @@ export default function AddEvent() {
           miniEvents: dataForm.miniEvents.map(event => ({
             ...event,
             description: event.description,
-            image: `${url_storage}${id_folder}/${dataForm.image}`,
-            startTime: "",
-            endTime: "",
+            image: `${url_storage}${id_folder}/${event.image}`,
+            startTime: event.startTime || '',
+            endTime: event.endTime || '',
             ticketRanks: event.ticketRanks.map(ticket => ({
               ...ticket,
               rankName: ticket.rankName,
-              description: ticket.ticketDescription,
+              description: ticket.description,
               price: parseFloat(ticket.price) || 0,
-              numberLimit: parseInt(ticket.quantity) || 0,
+              numberLimit: parseInt(ticket.numberLimit) || 0,
             })),
           })),
-        }
-        await addEvent(convertedData)
-        navigate("/event")
+        };
+        console.log("convertedData: ", convertedData);
+
+        // Add event to backend
+        await addEvent(convertedData);
+    
+        // Navigate on success
+        navigate("/event");
         toast.info('Vui lòng chờ quản trị viên duyệt sự kiện!', {
           position: "bottom-right",
           autoClose: 3000,
@@ -166,10 +173,10 @@ export default function AddEvent() {
           progress: undefined,
           theme: "light",
         });
-      }
-      catch (error) {
-        console.log(error)
-        toast.error('Lỗi', {
+      } catch (error) {
+        console.error("Payload being sent to Supabase:", convertedData);
+        console.error(`Error: ${error.message}`);
+        toast.error('Lỗi: Không thể thêm sự kiện', {
           position: "bottom-right",
           autoClose: 3000,
           hideProgressBar: true,
@@ -180,9 +187,10 @@ export default function AddEvent() {
           theme: "light",
         });
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
+    
     const goToNextStep = async() => {
       methods.handleSubmit(onSubmit, onError)();
     }
@@ -261,11 +269,11 @@ export default function AddEvent() {
                     }
                     {currentStep == 1 &&
                       <SecondStep
-                        shows={shows}
-                        setShows={setShows}
-                        showsPreview={showsPreview}
-                        setShowsPreview={setShowsPreview}
-                        handleShowsPreviewChange={handleShowsPreviewChange}
+                        miniEvents={miniEvents}
+                        setMiniEvents={setMiniEvents}
+                        miniEventsPreview={miniEventsPreview}
+                        setMiniEventsPreview={setMiniEventsPreview}
+                        handleMiniEventsPreviewChange={handleMiniEventsPreviewChange}
                       />
                     }
                     {/* {currentStep == 2 &&

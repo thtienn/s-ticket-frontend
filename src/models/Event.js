@@ -18,9 +18,25 @@ export const getEventById = async (id) => {
 }
 
 export const createEvent = async (event) => {
-    const { data, error } = await supabase.from("event").insert(event);
-    if (error) throw error;
-    return data;
+    try {
+        const response = await fetch('http://localhost:3000/event', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(event),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Failed to create event: ${response.statusText}`);
+        }
+    
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error creating event:', error);
+        throw error;
+    }
 }
 
 export const uploadImage = async (file, id_folder, id_image) => {

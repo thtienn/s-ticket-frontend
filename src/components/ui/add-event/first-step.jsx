@@ -9,6 +9,7 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
     districts: [],
     wards: [],
   })
+  
   // Lấy danh sách tỉnh/thành
   useEffect(() => {
     const fetchProvincesData = async () => {
@@ -103,7 +104,7 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
         <input
           type='text'
           className='w-full p-2 border border-[#219ce4] rounded-lg'
-          {...register("location.name", {required: 'Tên địa điểm là bắt buộc'})}
+          {...register("address.name", {required: 'Tên địa điểm là bắt buộc'})}
         />
         <p className="text-red-500 text-sm">{errors?.location?.name?.message}</p>
       </div>
@@ -116,14 +117,14 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
           <select
             className='w-full p-2 border border-[#219ce4] rounded-lg'
             disabled={locations.provinces.length === 0}
-            {...register('location.province', {
+            {...register('address.province', {
               required: 'Tỉnh/Thành là bắt buộc',
               onChange: (e) => {
                 const selectedProvince = locations.provinces.find(
                   (province) => province.name === e.target.value
                 )
-                setValue('location.district', '')
-                setValue('location.ward', '')
+                setValue('address.district', '')
+                setValue('address.ward', '')
                 setLocations(prev => ({ ...prev, wards: [] }))
                 setSelectedLocation(prev => ({ ...prev, province: selectedProvince.code }))
               },
@@ -146,13 +147,13 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
           <select
             className='w-full p-2 border border-[#219ce4] rounded-lg'
             disabled={locations.districts.length === 0}
-            {...register('location.district', {
+            {...register('address.district', {
               required: 'Quận/Huyện là bắt buộc',
               onChange: (e) => {
                 const selectedDistrict = locations.districts.find(
                   (district) => district.name === e.target.value
                 )
-                setValue('location.ward', '')
+                setValue('address.ward', '')
                 setSelectedLocation(prev => ({ ...prev, district: selectedDistrict.code }))
               },
             })}
@@ -176,7 +177,7 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
           <select
             className='w-full p-2 border border-[#219ce4] rounded-lg'
             disabled={locations.wards.length === 0}
-            {...register('location.ward', {
+            {...register('address.ward', {
               required: 'Phường/Xã là bắt buộc',
               onChange: (e) => {
                 const selectedWard = locations.wards.find(
@@ -199,10 +200,10 @@ const FirstStep = ({ selectedLocation, setSelectedLocation, handleEventPreviewCh
           <div className='font-semibold mb-2'>Địa chỉ</div>
           <input
             className='w-full p-2 border border-[#219ce4] rounded-lg'
-            {...register('location.address', {required: 'Địa chỉ là bắt buộc'})}
+            {...register('address.address', {required: 'Địa chỉ là bắt buộc'})}
             type="text"
           />
-          <p className="text-red-500 text-sm">{errors?.location?.address?.message}</p>
+          <p className="text-red-500 text-sm">{errors?.locations?.address?.message}</p>
         </div>
       </div>
 
