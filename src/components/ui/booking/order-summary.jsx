@@ -6,14 +6,17 @@ const OrderSummary = ({ currentStep, selectedTickets, event, onClick }) => {
   const paymentMethod = watch('payment_method')
   const name = watch('name')
   const email = watch('email')
-  const phone = watch('phone')
+  const phoneNumber = watch('phoneNumber')
   const start_time = watch('start_time')
-  const start_date = watch('start_date')
-  const formattedDate = () => {
-    if(start_date) {
-      const options = { day: '2-digit', month: 'long', year: 'numeric' }
-      const formatter = new Intl.DateTimeFormat('vi-VN', options)
-      return formatter.format(new Date(start_date));
+  const end_time = watch('end_time')
+  const formattedDateTime = (dateString) => {
+    if (dateString) {
+      const date = new Date(dateString)
+      const dateOptions = { day: '2-digit', month: 'long', year: 'numeric' }
+      const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' }
+      const dateFormatter = new Intl.DateTimeFormat('vi-VN', dateOptions)
+      const timeFormatter = new Intl.DateTimeFormat('vi-VN', timeOptions)
+      return ` ${timeFormatter.format(date)},${dateFormatter.format(date)}`
     }
     return ''
   }
@@ -38,10 +41,15 @@ const OrderSummary = ({ currentStep, selectedTickets, event, onClick }) => {
         />
         <span className='text-xs font-bold'>{event?.title}</span>
       </div>
-      
+
       <div className="flex justify-between items-center">
-        <span className='text-[#526876] font-normal'>Thời gian</span>
-        <span className='text-[#1B1B1B] font-semibold'>{`${start_time || ''}, ${formattedDate()}`}</span>
+        <span className='text-[#526876] font-normal'>Bắt đầu</span>
+        <span className='text-[#1B1B1B] font-semibold'>{formattedDateTime(start_time)}</span>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <span className='text-[#526876] font-normal'>Kết thúc</span>
+        <span className='text-[#1B1B1B] font-semibold'>{formattedDateTime(end_time)}</span>
       </div>
 
       <hr className="border-t border-[#B2BCC2]" />
@@ -58,39 +66,39 @@ const OrderSummary = ({ currentStep, selectedTickets, event, onClick }) => {
         </div>
         <div className="flex justify-between items-center">
           <span className='text-[#526876] font-normal'>Điện thoại</span>
-          <span className='text-[#1B1B1B] font-semibold'>{phone || ''}</span>
+          <span className='text-[#1B1B1B] font-semibold'>{phoneNumber || ''}</span>
         </div>
       </div>
-      
+
       <hr className="border-t border-[#B2BCC2] border-dashed" />
 
       <div className='space-y-2'>
         <span className='font-bold text-base'>Hình thức thanh toán</span>
         <label className='block cursor-not-allowed text-[#526876] font-normal'>
-          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="momo" disabled checked={paymentMethod === "momo"}/>
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="momo" disabled checked={paymentMethod === "momo"} />
           Momo
         </label>
         <label className='block cursor-not-allowed text-[#526876] font-normal'>
-          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="zalo" disabled checked={paymentMethod === "zalo"}/>
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="zalo" disabled checked={paymentMethod === "zalo"} />
           ZaloPay
         </label>
         <label className='block cursor-not-allowed text-[#526876] font-normal'>
-          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="paypal" disabled checked={paymentMethod === "paypal"}/>
+          <input className='w-3 h-3 mr-2' type="radio" name="payment" value="paypal" disabled checked={paymentMethod === "paypal"} />
           PayPal
         </label>
       </div>
-      
+
       <hr className="border-t border-[#B2BCC2] border-dashed" />
 
       <div className='space-y-2'>
         <span className='font-bold text-base'>Loại vé</span>
         {selectedTickets.map((ticket) => {
-          if(ticket.amount > 0) {
+          if (ticket.amount > 0) {
             return (
-            <div key={ticket.ticket_id} className="flex justify-between">
-              <span className='text-[#526876] font-normal'>{ticket.name} x{ticket.amount}</span>
-              <span className='text-[#1B1B1B] font-semibold'>{(ticket.amount * ticket.price).toLocaleString()} đ</span>
-            </div>
+              <div key={ticket.ticket_id} className="flex justify-between">
+                <span className='text-[#526876] font-normal'>{ticket.name} x{ticket.amount}</span>
+                <span className='text-[#1B1B1B] font-semibold'>{(ticket.amount * ticket.price).toLocaleString()} đ</span>
+              </div>
             )
           }
         })}
@@ -100,18 +108,6 @@ const OrderSummary = ({ currentStep, selectedTickets, event, onClick }) => {
         <span className='text-[#526876] font-normal'>Tổng tiền</span>
         <span className='text-[#0F2C40] font-bold text-xl'>{calculateTotal().toLocaleString()} đ</span>
       </div>
-
-      <button
-        className={`w-full p-3 rounded-lg font-bold text-center ${
-          currentStep === 2 ?
-            'bg-[#219ce4] text-[#FAFAFA] cursor-pointer hover:bg-sky-400'
-            : 'bg-[#F3F3F3] text-[#B2BCC2] cursor-not-allowed'
-        }`}
-        onClick={handleSubmit(onClick)}
-        disabled={currentStep !== 2}
-      >
-        Mua ngay
-      </button>
     </div>
   )
 }
