@@ -24,29 +24,69 @@ export default function Manage() {
     const [loading, setLoading] = useState(true);
     const [filteredEvents, setFilteredEvents] = useState([]);
 
+    // useEffect(() => {
+    //     const fetchEvents = async () => {
+    //         setLoading(true);
+    //         try {
+    //             const { userData, sessionStatus } = await fetchUser();
+
+    //             if (sessionStatus && userData?.email) {
+    //                 const { data, error } = await supabase
+    //                     .from('events')
+    //                     .select('id, name, organizer, miniEvents, status')
+    //                     .eq('organizationId', userData.id)
+    //                     .match({ status: 'APPROVED' });
+    //                 if (error) {
+    //                     console.error('Error fetching events:', error);
+    //                 } else {
+    //                     setEvents(data);
+    //                     setFilteredEvents(data);
+    //                 }
+    //             } else {
+    //                 console.error('User is not logged in or email is unavailable.');
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching user data:', error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchEvents();
+    // }, []);
+
     useEffect(() => {
         const fetchEvents = async () => {
             setLoading(true);
             try {
-                const { userData, sessionStatus } = await fetchUser();
+                const { userData, sessionStatus } = await fetchUser ();
 
-                if (sessionStatus && userData?.email) {
-                    const { data, error } = await supabase
-                        .from('events')
-                        .select('id, title, organizer, shows, approveStatus')
-                        .eq('email', userData.email)
-                        .match({ approveStatus: 'approved' });
-                    if (error) {
-                        console.error('Error fetching events:', error);
-                    } else {
-                        setEvents(data);
-                        setFilteredEvents(data);
+                if (sessionStatus && userData?.id) {
+                    // Construct the filter options as a JSON string
+                    const filter = JSON.stringify({
+                        where: {
+                            organizationId: parseInt(userData.id,10),
+                            // status: 'APPROVED',
+                        },
+                    });
+
+                    console.log("User: ", userData.id)
+
+                    // Fetch events from your backend
+                    const response = await fetch(`http://localhost:3000/event/my-events/${userData.id}`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch events');
                     }
+
+                    const data = await response.json();
+                    setEvents(data);
+                    setFilteredEvents(data);
                 } else {
-                    console.error('User is not logged in or email is unavailable.');
+                    console.error('User  is not logged in or ID is unavailable.');
                 }
             } catch (error) {
-                console.error('Error fetching user data:', error);
+                console.error('Error fetching user data or events:', error);
             } finally {
                 setLoading(false);
             }
@@ -64,14 +104,14 @@ export default function Manage() {
                 break;
             case 'Sắp tới & đang diễn ra':
                 // Filter events that have at least one show that is not yet ended
-                filtered = events.filter(event => event.shows.some(show => new Date(show.end_date) > new Date()));
+                filtered = events.filter(event => event.miniEvents.some(show => new Date(show.endTime) > new Date()));
                 break;
             case 'Đã diễn ra':
                 // Filter events that have all shows ended
-                filtered = events.filter(event => event.shows.every(show => new Date(show.end_date) < new Date()));
+                filtered = events.filter(event => event.miniEvents.every(show => new Date(show.endTime) < new Date()));
                 break;
             case 'Đã xóa':
-                filtered = events.filter(event => event.approveStatus === 'declined');
+                filtered = events.filter(event => event.status === 'REJECTED');
                 break;
             default:
                 filtered = events;
@@ -81,7 +121,7 @@ export default function Manage() {
     }
 
     const handleRemoveEvent = async (event_id, status) => {
-        const { data, error } = await supabase.from('events').update({ approveStatus: status }).eq('id', event_id);
+        const { data, error } = await supabase.from('event').update({ status: status }).eq('id', event_id);
         if (error) {
             console.log('error', error);
             return;
@@ -89,7 +129,7 @@ export default function Manage() {
         console.log(data);
         const updatedEvents = events.map(event => {
             if (event.id === event_id) {
-                return { ...event, approveStatus: status };
+                return { ...event, status: status };
             }
             return event;
         });
@@ -133,12 +173,12 @@ export default function Manage() {
                                 </thead>
                                 <tbody>
                                     {filteredEvents.map((event, index) => {
-                                        const remainingTickets = event.shows?.reduce((totalTickets, show) => {
+                                        const remainingTickets = event.miniEvents?.reduce((totalTickets, show) => {
                                             return totalTickets + show.ticket_types?.reduce((showTotal, ticket) => showTotal + ticket.quantity, 0) || 0;
                                         }, 0) || 0;
                                         
-                                        const totalRevenue = event.shows?.reduce((totalRevenue, show) => {
-                                            return totalRevenue + show.ticket_types?.reduce(
+                                        const totalRevenue = event.miniEvents?.reduce((totalRevenue, show) => {
+                                            return totalRevenue + show.ticketRanks.reduce(
                                                 (showTotal, ticket) => showTotal + (ticket.amount - ticket.quantity) * ticket.price,
                                                 0
                                             ) || 0;
@@ -146,12 +186,12 @@ export default function Manage() {
 
                                         return (
                                             <tr key={index} className="hover:bg-gray-100">
-                                                <td className="border px-4 py-2 max-w-[200px]">{event.title}</td>
+                                                <td className="border px-4 py-2 max-w-[200px]">{event.name}</td>
                                                 <td className="border px-4 py-2">
-                                                    {event.shows.length > 0 ? new Date(event.shows[0].start_date).toLocaleDateString() : null}
+                                                    {new Date(event.startTime).toLocaleString()}
                                                 </td>
                                                 <td className="border px-4 py-2">
-                                                    {event.shows[index]?.ticket_types?.reduce((total, ticket) => total + (ticket.amount - ticket.quantity), 0) || 0}
+                                                    {event.miniEvents[index]?.ticketRanks?.reduce((total, ticket) => total + (ticket.amount - ticket.quantity), 0) || 0}
                                                 </td>
                                                 <td className="border px-4 py-2">{remainingTickets}</td>
                                                 <td className="border px-4 py-2">{totalRevenue.toLocaleString()}₫</td>

@@ -45,9 +45,9 @@ export default function AddEvent() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-        const { sessionStatus } = await fetchUser()
+        const { userData, sessionStatus } = await fetchUser()
         if(sessionStatus) {
-            // methods.setValue('email', sessionStatus?.user?.email)
+            methods.setValue('organizationId', userData?.id)
             setSession(true)
         }
     }
