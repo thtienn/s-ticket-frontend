@@ -12,7 +12,7 @@ export default function Banner({ event, onScrollToDescription }) {
           <div className="flex flex-col gap-2">
             <span className="text-xl font-bold">{event?.name}</span>
             <span>{event?.organizerName}</span>
-            <span>{new Date(event?.date).toLocaleDateString('vi-VN', options)} </span>
+            <span>{new Date(event?.startTime).toLocaleDateString('vi-VN', options)} </span>
           </div>
           <div>
             <div className="flex items-center justify-between">
