@@ -22,7 +22,7 @@ export default function EventDescription({ event }) {
               </div>
             </div>
             <button
-              className="border border-black rounded-[32px] px-8 py-2 flex flex-row gap-2 items-center cursor-pointer"
+              className="border border-black rounded-[32px] px-8 py-2 flex flex-row gap-2 items-center cursor-pointer bg-white"
               onClick={toggleExpand}
             >
               <span className="text-black font-normal text-lg">Xem thêm</span>
