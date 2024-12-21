@@ -19,9 +19,11 @@ const Carousel = () => {
       let url = `${baseUrl}/event`;
       let filter = {
           where: {
-              status: 'APPROVED',
               isOnAd: true
-          }
+          },
+          order: {
+              startTime: 'ASC'
+          },
       }
       const response = await fetch(url + `?filter=${encodeURIComponent(JSON.stringify(filter))}`);
       if (!response.ok) {

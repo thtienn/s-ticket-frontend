@@ -72,13 +72,7 @@ export default function Section({ title, categoryItems, maxCards }) {
         };
     
         fetchEvents();
-    }, [activeCategory]);    
-
-    useEffect(() => {
-        if (categoryItems.length > 0) {
-            setActiveCategory(categoryItems[0]);
-        }
-    }, [categoryItems]);
+    }, [activeCategory]);
 
     const eventsToDisplay = events.slice(0, maxCards);
     const chunkedEvents = chunkArray(eventsToDisplay, 3);
