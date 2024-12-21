@@ -48,7 +48,7 @@ export default function Home() {
                     <main className="flex-grow items-center justify-center flex flex-col w-full overflow-x-hidden">
                         <Carousel />
                         <Section title='SỰ KIỆN NỔI BẬT' categoryItems={RECENT_CATEGORY} maxCards={3} />
-                        <Section title='SỰ KIỆN' categoryItems={EVENT_CATEGORY} />
+                        <Section title='SỰ KIỆN' categoryItems={EVENT_CATEGORY} maxCards={6} />
                     </main>
                     <Footer />
                 </div>

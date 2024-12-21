@@ -26,7 +26,7 @@ function chunkArray(array, chunkSize) {
 export default function Section({ title, categoryItems, maxCards }) {
     const navigate = useNavigate()
 
-    const [activeCategory, setActiveCategory] = useState({ text: 'Tất cả', value: 'All' });
+    const [activeCategory, setActiveCategory] = useState(categoryItems[0]);
     const [events, setEvents] = useState([]);
 
     // fetch events from database with category filtering
@@ -57,7 +57,6 @@ export default function Section({ title, categoryItems, maxCards }) {
                     url += `?filter=${encodeURIComponent(JSON.stringify(filter))}`
                 }
                 
-
                 const response = await fetch(url);
 
                 if (!response.ok) {
