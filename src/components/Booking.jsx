@@ -75,7 +75,7 @@ export default function Booking() {
 
   useEffect(() => {
     if (currentStep === 2) {
-      setTimeLeft(60);
+      setTimeLeft(60 * 10);
     }
   }, [currentStep]);
 

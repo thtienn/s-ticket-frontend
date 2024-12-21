@@ -46,7 +46,7 @@ const FourthStep = ({ transactionId }) => {
   }
   const handlePayment = async (status) => {
     try {
-      await updatePaymentStatus(transactionId.id, status);  // Gọi API cập nhật trạng thái thanh toán
+      await updatePaymentStatus(transactionId.id, status);
       const message = status === "SUCCESSFUL" ? "Payment was successful!" : "Payment failed.";
       alert(message);
       navigate('/my-tickets');  // Chuyển hướng về trang chủ
@@ -59,22 +59,22 @@ const FourthStep = ({ transactionId }) => {
   return (
     <div className='flex flex-col gap-4'>
       <div>
-        <div className="text-[#1B1B1B] text-xl font-extrabold">Hoàn tất</div>
+        <div className="text-[#1B1B1B] text-xl font-extrabold">Vui lòng tiến thành thanh toán</div>
         <div className="text-[#AEAEAE] text-base font-normal">
           Vui lòng hoàn tất thanh toán!
         </div>
+
+      </div>
+      {method === 'paypal' ? (
+        <PayPalButon total={total} handlePayment={handlePayment} />
+      ) : <>
         <button style={{ backgroundColor: '#1b1b1b', color: '#fafafa' }} onClick={() => handlePayment("SUCCESSFUL")}>
           Thanh toán thành công
         </button>
         <button style={{ backgroundColor: '#1b1b1b', color: '#fafafa' }} onClick={() => handlePayment("USER_CANCELLED")}>
           Thanh toán thất bại
         </button>
-      </div>
-      {method == 'paypal' ? (
-        <PayPalButon total={total} onSuccess={handleSubmit(handleBooking)} />
-      ) : (
-        <></>
-      )}
+      </>}
     </div>
   )
 }
