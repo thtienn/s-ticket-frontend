@@ -38,6 +38,9 @@ export default function Section({ title, categoryItems, maxCards }) {
                     where: {
                         status: 'APPROVED'
                     },
+                    order: {
+                        startTime: 'DESC'
+                    },
                     take: maxCards
                 }
                 if (activeCategory.value === 'All') {

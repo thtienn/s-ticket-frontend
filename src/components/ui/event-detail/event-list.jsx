@@ -36,18 +36,19 @@ export default function EventList({ event }) {
                         {event?.miniEvents.map((show) => {
                             // Tính tổng lượng vé còn lại
                             const totalTicketsLeft = show.ticketRanks.reduce((total, ticket) => total + ticket.numberLimit - ticket.soldNumber, 0);
-
                     return (
                         <div
                             key={show.id}
                             className={`flex items-center justify-between px-6 py-5 rounded-2xl text-[#FAFAFA] ${
-                                totalTicketsLeft > 0 ? 'bg-[#1b1b1b]' : 'bg-[#B2BCC2]'
+                                totalTicketsLeft > 0 && new Date(show.startTime) >= new Date() ? 'bg-[#1b1b1b]' : 'bg-[#B2BCC2]'
                             }`}
                         >
                             <span>
                             {new Date(show.startTime).toLocaleTimeString('vi-VN', timeOptions)}, {new Date(show.startTime).toLocaleDateString('vi-VN', dateOptions)} - {new Date(show.endTime).toLocaleTimeString('vi-VN', timeOptions)}, {new Date(show.endTime).toLocaleDateString('vi-VN', dateOptions)}
                             </span>
-                            {totalTicketsLeft > 0 ? (
+                            {new Date(show.startTime) < new Date() ? (
+                                <span className="p-2 text-sm">Đã diễn ra</span>
+                            ) : totalTicketsLeft > 0 ? (
                                 <button
                                     onClick={() => handleBooking(show.id)}
                                     className="p-2 border-none text-sm bg-[#219CE4] rounded-lg"
